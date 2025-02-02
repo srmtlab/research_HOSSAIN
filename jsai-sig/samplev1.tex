@@ -1,0 +1,92 @@
+\documentclass[a4j]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\geometry{a4paper, margin=25mm}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{multicol}
+\usepackage{titlesec}
+
+% Header and Footer settings
+\pagestyle{fancy}
+\fancyhead[L]{論文原稿の和文タイトル}
+\fancyhead[R]{Page \thepage}
+\fancyfoot{}
+
+% Title formatting
+\title{
+    論文原稿の和文タイトル \\
+    \vspace{0.2cm}
+    \large A Multimodal System for Stress Detection and Visualization using Social Signal Processing and Large Language Models
+}
+\author{
+    著者 1\textsuperscript{1} \quad 著者 2\textsuperscript{1,2} \quad 著者 3\textsuperscript{2} \\
+    \vspace{0.2cm}
+    Shun Shiramatsu\textsuperscript{1} \quad HOSSAIN Syeda Tanzina \textsuperscript{1,2} \quad Author 3\textsuperscript{2} (著者英語表記)
+}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\noindent
+\textsuperscript{1} 和文所属 1 \hspace{1cm} \textsuperscript{1} English Affiliation 1 (所属英語表記) \\
+\textsuperscript{2} 和文所属 2 \hspace{1cm} \textsuperscript{2} English Affiliation 2 (所属英語表記)
+
+\vspace{0.5cm}
+
+\begin{abstract}
+Stress detection is increasingly crucial for mental health monitoring, yet traditional approaches relying on single-modal data, such as text or audio, often lack accuracy and contextual understanding. This research introduces a multimodal stress detection system that integrates Social Signal Processing (SSP) techniques, voice feature analysis, and Large Language Models (LLMs). By combining linguistic (text-based) and paralinguistic (audio-based) cues, the system enhances stress estimation through a hybrid approach.
+To enhance user interaction and usability, the system is implemented with a Streamlit-based UI for real-time stress visualization. Current UX improvements focus on integrating stress trend history tracking to provide users with longitudinal insights into their stress patterns. Future work aims to refine accessibility, usability, and multimodal fusion techniques to further improve stress recognition capabilities.
+This study contributes to the field of voice-based stress analysis by integrating  with an interactive user interface, making stress detection more accessible and interpretable for real-world mental health applications.
+
+\end{abstract}
+
+\section{Introduction}
+In today's world, stress is an ongoing issue that affects both physical and mental health, influencing everything from mood and productivity to long-term well-being. Stress is a natural phenomenon that causes physical and emotional tension. Chronic stress is associated with serious diseases such as heart disease, anxiety, depression, and immunosuppressed. Stress is analyzed by expression, tone , pitch and physiological signals. The process of detecting when someone is stressed by measuring their physiological signals is known as stress detection. To analyze these signals and classify them as stressed or relaxed, some techniques are used. The physiological signals of a person are measured by physiological sensors such as the pulse of blood volume (BVP), the galvanic skin response (GSR), and the electrocardiograms (ECGs) [20]. In mental health care, intelligent technology has shown significant promise in delivering personalized treatments and real-time stress detection. [1] [2].  Due to this, early and precise stress detection is vital for workplace wellness, healthcare, and personal well-being. However, many existing systems use single-modal data, such as text or voice, which limits their ability to capture all aspects of stress symptoms. Pay attention to multimodal systems that combine a variety of data sources, including textual context and voice. This thesis investigates the deployment of a flexible and moral multimodal AI system for real-time stress detection.Stress has become a global problem that impacts not only mental health but also lifestyles and productivity. Due to the absence of easily accessible, reliable, and non-invasive methods, many people face obstacles in monitoring their stress. Conventional methods, such as self-assessment questionnaires or physiological monitoring, are inadequate in terms of timely insights or are impractical for daily use. Innovative systems that can effectively identify stress in real-world situations are, therefore, becoming more and more necessary.
+The voice is a perfect medium for stress detection because it is a natural source of emotional information. It transmits paralinguistic clues like tone, pitch, and rhythm in addition to linguistic content, which can reveal a person's emotional condition. Powerful tools like Large Language Models (LLMs), which can analyze textual material for deeper contextual and emotional insights, have been made possible by breakthroughs in Natural Language Processing (NLP). The majority of stress detection systems now only accept single input, which restricts the precision and usefulness. 
+Current systems' emphasis on immediate stress assessments, which overlooks long-term patterns and trends, is another major drawback. Furthermore, existing tools often lack user-friendly interfaces, user cannot use without technical expertise.
+This study is motivated by an urge to develop a multimodal system that enhances the accuracy of stress detection by integrating text-based and voice-based analysis. Using LLMs for text analysis and deep learning models for audio processing, this study aims to close the gap between state-of-the-art AI technology. A more precise and user-friendly method of tracking stress over time is provided by incorporating interactive features like stress trend tracking, which also enables users to take proactive measures for improved mental health.
+  Current stress detection systems often suffer from ethical concerns regarding data privacy, and a lack of adaptive intervention mechanisms. How can we design an ethical, adaptive, and multimodal AI system that not only detects stress accurately but also provides meaningful support to promote mental well-being?
+To develop a system that estimates and visualizes user stress levels using Social Signal Processing (SSP) techniques, including voice analysis for both linguistic (text-based) and paralinguistic (audio-based).
+   To develop a multimodal AI system that integrates voice analysis and large language models (GPT-4o) for real-time stress detection.
+   To evaluate the performance of proposed model in detecting stress from audio data.
+   To design an interactive  Adaptive UI for clear stress visualization
+   Designing a long term stress trends for identifying stress patterns and helps user for self-regulation and stress trend graph improves readability
+   Supporting metacognition and mental health care.
+    To ensure ethical data usage and privacy preservation in the proposed system.
+\section{Literature review}
+\subsection{ファイル形式・サイズ}
+Adobe(R) PDF (Portable Document Format) 形式のファイルを提出してください。その他の形式での提出は受け付けませんので、ご注意ください。ファイル名の扱い方は「規」にしてください。
+
+\subsection{原稿枚数}
+この指定フォーマットでA4用紙1ページ以上、8ページ以下です。
+
+\section{System Design}
+Word用テンプレート（dot）ファイルです。このファイルを開いて、新規ファイルを作成してください。
+
+\subsection{タイトル部分}
+和文タイトルは必須ですが、英語タイトルはもし難しいようであれば無くても構いません。お名前とご所属の英語表記を記入するべき二欄です。
+
+\subsection{本文}
+本文スタイルを設定後は、スタイル「標準」をお使いください。標準フォーマットで自動的に整形されます。
+\section{System implementation}
+\begin{figure}[htbp]
+    \centering
+    \framebox(150,100){Sample Figure}
+    \caption{図の挿入例.}
+    \label{fig:example1}
+\end{figure}
+\section{Result and discussion}
+\section{Conclusion}
+
+\section*{参考文献}
+
+\begin{enumerate}
+    \item 第1著者, 第2著者, 第3著者: 論文タイトル, 掲載誌名, Vol. xx, No. xx, pp. xxx-xxx, (出版年)
+    \item First A., Second A., and Third A.: Paper Title, Publication Source, Vol. xx, No. xx, pp. xxx-xxx, (year)
+\end{enumerate}
+
+\end{document}

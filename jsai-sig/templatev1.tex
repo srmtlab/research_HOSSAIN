@@ -1,0 +1,1156 @@
+\documentclass[a4j, twocolumn]{article}
+%\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\geometry{top=25mm, bottom=25mm, left=20mm, right=20mm}
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage{multicol}
+\usepackage{parskip} % For better paragraph spacing
+\usepackage{placeins} % Add this in the preamble
+\usepackage{graphicx} % Add this to the preamble if not already included
+\usepackage{adjustbox} % For resizing the tabl
+\usepackage{longtable}
+\usepackage{geometry}
+\geometry{a4paper, margin=1in}
+% Header and Footer settings
+\pagestyle{fancy}
+\fancyhead[L]{}
+\fancyhead[R]{}
+\fancyfoot[C]{\thepage}
+
+% Section formatting
+\titleformat{\section}{\large\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{1em}{}
+
+% Title block formatting
+\title{\textbf{\textsf{\ A Multimodal System for Stress Detection and Visualization using Social Signal Processing and Large Language Models}}}
+\author{
+    Shun Shiramatsu$^1$ \and Hossain Syeda Tanzina$^{1}$
+}
+\date{}
+
+\begin{document}
+
+\twocolumn[
+    \maketitle
+    \noindent
+   $^1$  Department of Information Engineering and Intelligent Informatics, Nagoya Institute of Technology \\
+     $^2$ Graduate School of Information Engineering, Nagoya Institute of Technology \\
+    
+    \vspace{0.5cm}
+    \begin{abstract}
+    \noindent
+    Stress detection is increasingly crucial for mental health monitoring, yet traditional approaches relying on single-modal data, such as text or audio, often lack accuracy and contextual understanding. This research introduces a multimodal stress detection system that integrates Social Signal Processing (SSP) techniques, voice feature analysis, and Large Language Models (LLMs). By combining linguistic (text-based) and paralinguistic (audio-based) cues, the system enhances stress estimation through a hybrid approach. To enhance user interaction and usability, the system is implemented with a Streamlit-based UI for real-time stress visualization. Current UX improvements focus on integrating stress trend history tracking to provide users with longitudinal insights into their stress patterns. This study contributes to the field of voice-based stress analysis by integrating with an interactive user interface, making stress detection more accessible and interpretable for real-world mental health applications.
+    \end{abstract}
+    \vspace{0.5cm}
+]
+\vspace{10pt} % Add space to prevent overlap
+\section{Introduction}
+In today’s world, stress is an ongoing issue that affects both physical and mental health, influencing everything from mood and productivity to long-term well-being. Stress is a natural phenomenon that causes physical and emotional tension. Chronic stress is associated with serious diseases such as heart disease, anxiety, depression, and immunosuppression. Stress is analyzed by expression, tone, pitch, and physiological signals. The process of detecting when someone is stressed by measuring their physiological signals is known as stress detection. To analyze these signals and classify them as stressed or relaxed, some techniques are used. The physiological signals of a person are measured by physiological sensors such as the pulse of blood volume (BVP), the galvanic skin response (GSR), and the electrocardiograms (ECGs)[1]. 
+In mental health care, intelligent technology has shown significant promise in delivering personalized treatments and real-time stress detection. [2] [3]. Due to this, early prediction of stress conditions is vital for workplace wellness, healthcare, and personal well-being. However, many existing systems use single-modal data, such as text or voice, which limits their ability to capture the complexities of stress symptoms. Paying attention to multimodal systems that combine a variety of data sources, including textual context and voice. This thesis investigates the deployment of a flexible and normal multimodal AI system for real-time stress detection.
+Stress has become a global problem that impacts not only mental health but also lifestyles and work productivity. Due to this, an accessible, reliable, and non-invasive solution is essential.
+\section{Literature Review}
+Stress significantly impacts mental health through physiological, emotional, and cognitive changes. Prolonged stress is linked to psychiatric disorders, highlighting the need for effective early diagnosis and intervention. Various studies explore stress detection methodologies, each with strengths and limitations.
+
+The study on COVID-19 stress and mental health [4] emphasizes psychological flexibility but is limited by its cross-sectional approach and reliance on self-reported data. To address this, study [5] integrates self-reported data with physiological sensor-based stress detection, tracking electrodermal activity (EDA), heart rate (HR), and skin temperature. While deep learning algorithms enhance accuracy, real-world applicability remains limited due to lab-based settings and sensor reliability issues.
+
+Speech-based stress detection [6] employs CNNs to classify stressed and unstressed speech using Mel Spectrogram and MFCC features. However, it is restricted by a controlled environment, binary classification limitations, and dataset constraints. Similarly, NLP-based textual stress detection [7] identifies linguistic markers but struggles with linguistic diversity, contextual nuances, and the absence of multimodal data.
+
+Social Signal Processing (SSP) [8] analyzes stress through non-verbal cues such as gestures, vocal intonation, and facial expressions, useful in industries like customer service. However, its accuracy is affected by contextual limitations and data quality issues.
+
+Large Language Models (LLMs) and stress analysis [9] investigate whether LLMs exhibit performance variations under stress, as per the Yerkes-Dodson law. While findings suggest LLMs mirror human stress responses to some extent, prompt-based stress induction lacks real-world validity, and LLMs do not have physiological stress responses.
+
+
+  \subsection{Limitations in Current Stress Detection and Conversational AI Systems}
+  The study [10] explores how cultural and contextual factors influence conversational AI in emotion recognition. Using voice and image data, it classifies seven fundamental emotions, including sarcasm, with 85-95 accuracy. The authors emphasize considering environmental and cultural factors for more reliable emotion detection. However, dataset homogeneity limits cross-cultural generalizability, biases persist despite balancing efforts, and sarcasm remains difficult to detect due to its nuanced nature. Additionally, environmental fluctuations, such as background noise, impact system performance.
+The combination of sensor technology and conversational AI [11] enables context-sensitive interactions by integrating real-time data from environmental sensors, biometric devices, and IoT systems. This enhances AI’s ability to understand user context, improving applications like healthcare, where AI-driven virtual assistants adapt based on stress levels, temperature, and heart rate. However, challenges like interoperability, scalability, and data heterogeneity must be addressed for optimal system performance.
+Ethical concerns in AI-driven stress detection [12] include transparency, data privacy, and the lack of human empathy in AI interactions. While AI aids early diagnosis and accessibility in mental health care, algorithmic opacity, patient reluctance, and ethical considerations regarding consent and autonomy remain key concerns. 
+Despite significant advancements in text and audio-based stress detection, current approaches lack the accuracy and contextual understanding needed for real-time applications. This review highlights the need for multimodal systems that integrate linguistic and paralinguistic cues, offering a foundation for this study.
+The majority of the research that has been done on stress detection has been either text-based or audio-based. Even while CNNs and LSTMs have shown excellent accuracy in identifying speech emotions, feature selection and dataset quality changes depending on dataset. LLMs have shown promise in extracting stress-related linguistic features, but their effectiveness in combination with voice analysis is still being explored. In order to fill this gap, this study proposes a multimodal stress detection system that uses both textual and auditory signals. A real-time user interface (UI) with stress trend tracking is also created to enhance accessibility and user interaction. In order to facilitate practical uses in mental health monitoring and emotional well-being, the results of this study assist in establishing solid and interpretable stress detection frameworks.
+%\section*{Summary Table of Stress and Mental Health Studies}
+
+%\begin{longtable}{|p{3.5cm}|p{4cm}|p{4.5cm}|p{4.5cm}|}
+%\hline
+%\textbf{Year \& Author(s)} & \textbf{Techniques/Methods} & \textbf{Findings} & \textbf{Limitations} \\
+%\hline
+%\endfirsthead
+%\hline
+%\textbf{Year \& Author(s)} & \textbf{Techniques/Methods} & %\textbf{Findings} & \textbf{Limitations} \\
+%\hline
+%\endhead
+%\hline
+%\endfoot
+%2024, Sebastião \& Neto & Psychological analysis during COVID-19 & Explores the role of psychological flexibility and emotional schemas in stress management during emergencies. & Relies on self-reported data; limited generalizability due to pandemic context; ignores socioeconomic factors and prior mental health issues. \\
+%\hline
+%2024, Study on Wearable Sensors & Physiological monitoring with wearable technology & Combines self-reported stress levels with EDA, HR, and skin temperature; achieves high accuracy with deep learning analysis. & Laboratory environment limits real-world relevance; issues with motion artifacts, small sample size, and diversity; challenges in capturing rapid stress changes. \\
+%\hline
+%2024, Chyan et al. & CNN for speech-based stress detection & Utilizes MFCCs and Mel Spectrograms to classify stress in speech with high accuracy (97.1\%). & Controlled setup; binary classification misses stress gradation; lacks real-time validation; ignores real-world noise and dataset variability. \\
+%\hline
+%2020, Yoon et al. & Semantic analysis of textual data & Identifies linguistic patterns in private messages and social media posts to detect stress using NLP techniques. & Dataset limitations; lacks multimodal data; struggles with linguistic trends and contextual subtleties; raises privacy concerns. \\
+%\hline
+%2024, Singh et al. & Social Signal Processing (SSP) for emotion detection & Analyses sentiment through non-verbal cues such as gestures and intonation; useful in customer interaction fields. & Data quality issues; computationally intensive for real-time analysis; contextual and cultural limitations; privacy concerns in analyzing conversations. \\
+%\hline
+%2022, Study on ML/DL Models & SVM, RF, and NN for physiological data & Highlights the utility of feature selection, skin reaction, HRV, and HR for stress detection with ML/DL models. & Lack of adaptability; controlled setups limit real-world application; low interpretability for clinical use; real-time implementation remains immature. \\
+%\hline
+%2024, Multimodal Study & Combining text and audio signals & Outperforms unimodal approaches by integrating linguistic cues and vocal emotions; uses machine learning for interaction analysis. & Resource-intensive; lacks high-quality multimodal datasets; cultural and individual diversity challenges; difficulties in synchronizing text and audio data for real-time application. \\
+%\hline
+%2024, Yiqun et al. & SVM with MFCCs & High accuracy for stress classification by extracting spectral features from speech. & Requires diverse and high-quality datasets; affected by environmental noise; computational challenges for real-time use; individual variability limits model generalizability. \\
+%\hline
+%2024, Study on LLMs & StressPrompt for stress analysis in LLMs & Demonstrates performance variations in LLMs under stress using psychological prompts; identifies internal representation shifts similar to humans. & Lacks real-world validation; limited generalizability; results depend on specific LLM design and controlled settings; no physiological equivalence to humans. \\
+%\hline
+%2024, Macháček et al. & Cultural and contextual emotion detection via AI & Combines voice and image data to classify emotions; achieves accuracies from 85\% to 95\%. & Struggles with sarcasm detection; dataset biases reduce generalizability; environmental noise impacts performance; challenges in ensuring fairness and cross-cultural consistency. \\
+%\hline
+%2024, Ranjan \& Thakur & IoT and biometric integration in conversational AI & Enhances contextual and environmental understanding for AI in healthcare; integrates biometric data for improved personalization and real-time response. & Issues with scalability, interoperability, and data heterogeneity; computationally intensive for real-time fusion of multiple data sources. \\
+%\hline
+%2024, Teye et al. & Ethical AI in mental health care & Highlights AI’s potential for early intervention and personalized care; emphasizes the need for regulatory frameworks and ethical standards. & Challenges in algorithmic transparency; lack of human empathy in AI; privacy concerns; resistance from patients and practitioners; difficulty in integrating AI into conventional systems. \\
+%\hline
+%\end{longtable}
+
+\section{System Design}
+Text and audio embeddings are the two main modules that comprise up my system. The system is thoughtfully designed to effectively combine both textual and audio information, creating a strong foundation for multimodal stress detection. Key aspects of the design include well-structured preprocessing pipelines, robust training and validation methods, efficient deployment strategies, and thorough dataset preparation. Each element has been carefully crafted to enhance the system's usability, scalability, and accuracy, ensuring it delivers reliable and practical results.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.5\textwidth]{jsai_sig-1_0_0/systemdesigndia.png}
+    \caption{Sample figure description here.}
+    \label{fig:systemdesigndia.png}
+\end{figure}
+
+\subsection{Dataset Description}
+  A limited number of audio recordings was used to generate and illustrate the functioning of the stress detection system's user interface (UI) and user experience (UX) components. These recordings, which come from openly accessible websites like Google, feature speech samples with a range of psychological tones. Even though the audio files don't represent a formal or standardized dataset, they are a useful tool for demonstrating the system's features, like trend monitoring and real-time stress level visualization. I used the audio file to capture voice at different stress levels. After processing these data, stress detection outputs were simulated and shown on the user interface. These samples are primarily being used to test and validate the stress visualisation features of interface and illustrate how stress trend tracking works throughout several sessions. Also checking interface is capable of handling various stressful aspects.
+ \begin{table}[htbp]
+\caption{Dataset Description}
+\label{tab:dataset_table}
+\centering
+\renewcommand{\arraystretch}{1.2} % Adjust row spacing for readability
+\setlength{\tabcolsep}{5pt} % Adjust column spacing
+\begin{tabular}{|p{2cm}|p{4cm}|} % Adjust column widths
+    \hline
+    \textbf{Audio} & \textbf{Text in the Audio} \\ \hline
+    Audio1 & I wonder what this is about \\ \hline
+    Fire & The place is on fire, please send help \\ \hline
+    Test1 & Loans that we can offer with this or farm ownership loans, operating lines of credit, or equipment and capital improvement need loans \\ \hline
+    sad.wav & The best food novel count me on the edge of my side \\ \hline
+    new recording 19.wav & 時間が戻れば私はあの時間に戻りたいま一回 \\ \hline
+    new recording 16.wav & So um... I'm sick. But my friend wanted me to be a deity myself because we always had to really cool. So uh... yeah, here it is. Do you want me to sing? Oh, it sounds really good singing. \\ \hline
+    new recording 23.wav & Life is difficult, but you are loved. You are loved and important, and you bring to this world things that no one else can so hold on \\ \hline
+    Airplane.wav & The airplane is almost full. \\ \hline
+    Gamer.mp3 & Why would you not want to fight for what you believe in? \\ \hline
+    Sad.mp3 & The delicious aroma of freshly baked bread filled the bakery. \\ \hline
+    1008TIE.wav & That is exactly what happened. \\ \hline
+    new recording 25.wav & Us comfort help isn’t given up. It’s refusing to give up. To use fall for a reason, and to use strength and weakness. I think... \\ \hline
+\end{tabular}
+\end{table}
+
+\subsection{Text Processing workflow}
+%\clearpage  % Forces all previous content to be placed before this point
+The Text Processing Workflow describes the procedures for evaluating and interpreting the text to detect stress. Figure 3.2 shows the text processing workflow, which consists of the following steps: Whisper converts audio into raw text. Using semantic context, GPT-4 analyzes the text to find stress signals. The system uses stress scale to classify stress levels (Low, Moderate, High). The system gives feedback, including stress management tips, based on the user's degree of stress. Each component in a text processing flow is responsible for handling a specific task. For example, an input handler handles text input from audio or manual entry, while an analysis engine uses GPT-4 to analyze text for stress content and analyze numerical stress levels. The formatter gets the results ready to be shown. The report generator generates reports that can be downloaded, while the display handler manages visual representation. It focuses on the processing of textual information obtained from speech. Whisper and GPT-4 are the main tools used in this workflow for the transcribed text's semantic analysis.
+ %\clearpage  % Forces all previous content to be placed before this point
+\vspace{-5mm} % Reduce vertical space
+\begin{figure}[H]
+\centering
+\includegraphics[width=1.0\columnwidth]{jsai_sig-1_0_0/textprocessingworkflow.png}
+\caption{Text processing flow}
+\label{fig:text flow}
+\end{figure}
+\subsection{Speech to Text Conversion (Whisper)}
+%\noindent
+%\begin{minipage}{\textwidth}
+\vspace{5mm} % Add spacing above or below a figure or text
+The use of Whisper for accurate transcription. For the flow of text generation This text processing module combines the manual transcript input option, text cleaning and preparation, and whisper to convert speech to text. Whisper converts speech to text. Draw attention to Whisper's main function of converting audio into text transcripts.  This module transcribes user speech into text and performs language analysis to detect stress-related context. Identifies specific words and phrases associated with stress, using GPT-4's capabilities to interpret context. The system captures the audio. The raw audio is passed into the speech recognition API. OpenAI‘s Whisper[16] to convert into text. The voice in the audio file is converted into a textual transcript. For text formatting, the transcript is formed as cleaned or standardized and removing unnecessary pauses or artifacts. 
+ The significance of text preparation for analysis, noise reduction, and transcription accuracy is emphasized. For instance: "The Whisper model processes audio inputs and generates a transcript with a high degree of accuracy, filtering out noise and ensuring that only meaningful words are passed to the next stage." 
+% Add spacing above or below a figure or text
+ %\clearpage % Forces all previous content to finish
+\vspace{-5mm} % Adjust the value as needed to reduce the gap
+\vspace{10pt} % Add space to prevent overlap
+\begin{figure}[H]
+\centering
+\includegraphics[width=1.0\columnwidth]{jsai_sig-1_0_0/textualnetwork2.png}
+\caption{Textual analysis}
+\label{fig:system_architecture}
+\end{figure}
+%\end{minipage}
+\vspace{10pt} % Add space to prevent overlap
+\subsection{Audio Processing workflow} 
+The main focus of the Audio Processing Workflow is the analysis of text data along with raw audio characteristics like pitch, tone, and frequency. This section describes how the use of voice characteristics in audio data enhances the stress detection system. Figure 3.3 illustrates the audio processing process that combines GPT-4, Whisper, and the backend to analyse stress. Important actions consist of utilising the frontend to upload the audio file. Whisper audio to text conversion. Using GPT-4 to perform stress analysis and storing audio files and JSON results for tracking history. The processing pipeline goes as follows: Whisper converts audio to a transcript, the frontend uploads the audio file to the Flask backend, which keeps it temporarily. The transcript is then submitted to GPT-4 for stress analysis, the results are kept in a JSON history, and the frontend receives the response. Using a REST API design, the system's frontend and backend operate on the default ports of Streamlit and Flask, respectively. They communicate via HTTP POST requests, file transfers take place via multipart/form-data, and JSON is delivered as the result. 
+\vspace{10pt} % Add space to prevent overlap
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.1\columnwidth]{jsai_sig-1_0_0/audioflow.png}
+    \caption{Audio processing flow}
+    \label{fig:system_architecture}
+\end{figure}
+\vspace{10pt} % Add space to prevent overlap
+%\subsubsection{Frontend to Backend Connection and Backend API Endpoint}
+%Data flows between the user interface and backend. How audio files are uploaded and routed to the backend for processing, highlighting the variations in data flow. 
+%For instance: "The frontend enables seamless audio file uploads, which are processed through APIs to generate real-time stress analysis results." APIs are utilized for seamless communication and emphasizing how the backend responds to demands for processing that are particular to audio in a different way than it does to text. 
+%For instance: "Backend APIs facilitate efficient data flow, ensuring that both audio features and their textual representations are analyzed synchronously." % 
+\subsection{Stress visualization workflow}
+This section describes an intuitive and interactive way for users to view their stress levels. Users can see their stress levels in an easy-to-understand format with the help of the stress visualization workflow (Figure 3.4). Stress data recorded in JSON is loaded by users interacting with the UI. Plotly and other libraries are used to process data and produce pie charts and other graphics. Interactive elements and insights into stress distribution are two of the visualization's main characteristics. Interactive elements such as Legend for reference, Click-to-hide sections and hover tooltips that display precise percentages. Clear patterns and stress percentages are displayed in visualisations, which aid users in efficiently interpreting their data.By choosing the option to "View stress trends," the user starts the process. A slider is then used by the user to select a time range for stress visualization. The process of retrieving and preprocessing. In data loading and Processing portion invloves of fetching stress data (from JSON) and get it ready for visualization. In this procedure, user-selected data is loaded according to the designated time frame. Arranging and preprocessing data in preparation for analysis.
+%\vspace{-5mm} % Adjust the value to control the spacing
+\vspace{10pt} % Add space to prevent overlap
+\begin{figure}[h]
+    \centering
+ \includegraphics[width=1.0\columnwidth]{jsai_sig-1_0_0/piestressvisual.png}
+    \caption{Stress Visualization flow}
+    \label{fig:system_architecture}
+\end{figure}
+\vspace{10pt} % Add space to prevent overlap
+%\subsubsection{Data Loading and Processing}
+%\subsubsection{Color Mapping Setup and Pie Chart Creation}
+\subsection{Stress trend analysis workflow}
+Changes in stress levels over time are monitored via the stress trend analysis workflow (Figure 3.5). To examine certain sessions, users can use time ranges to filter data and to improve insights and smooth out volatility, the system computes moving averages. Trends are displayed using interactive charts that can be customized. Interactive features include zoom and pan controls, a time range slider for filtering data, hover tooltips for displaying precise values, and a legend for trend lines and stress levels. This subsection explains how stress data is retrieved from storage and filtered based on the selected time range. It emphasizes the user’s role in selecting the desired range and how this choice influences the subsequent data analysis steps.The process utilized for highlighting the patterns and focusses on how patterns in stress data are highlighted through calculation. To smooth out variations and identify patterns in the data, a moving average is calculated across a specified session window.The tools and techniques for dynamic visualizations. Explains how dynamic visualizations are made using various tools and techniques. By enabling zooming, panning, and hovering, interactive graphs give viewers an in-depth assessment of stress patterns.Chances to use personalization to improve user interaction. The personalisation options available to enhance user interaction are described in this subsection. Plots can be altered by users to fit their tastes in terms of colour schemes, line styles, and data presentation.
+\vspace{10pt} % Add space to prevent overlap
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.1\columnwidth]{jsai_sig-1_0_0/stresstrendflow.png}
+    \caption{Stress trend analysis workflow}
+    \label{fig:system_architecture}
+\end{figure}
+\vspace{10pt} % Add space to prevent overlap
+%\subsubsection{Data Loading and Time Range Selection}
+. %the process by which stress data is retrieved and filtered.
+%\subsubsection{Moving Average Calculation}
+%\subsubsection{Interactive Plot Creation}
+%\subsubsection{Customizing Plot Layout}
+\section{System Implementation}
+ This section details the system’s implementation, focusing on UI/UX design, interaction flow, and backend integration. Visual outputs, examples, and screenshots illustrate its operation. UI/UX elements enhance engagement and usability, supporting stress visualization and detection.The system combines voice feature analysis and visualization to provide stress insights. It consists of the frontend using Streamlit[13] for input processing, output visualization, and interaction, and the backend using Flask [14] for response generation, model integration, and data processing. Key frontend features include audio playback and upload, dynamic visualization with line graphs and pie charts, and downloadable stress analysis reports. The interface allows smooth transitions between analysis, feedback, and file uploads. The backend processes text and audio inputs, integrating models and transmitting results to the frontend. Faster Whisper transcribes audio, extracts features, and analyzes stress levels. GPT-4 assesses transcripts and assigns stress scores from 1 to 7. Secure API communication ensures data transmission, generating stress levels, explanations, and analysis-based advice.
+
+ \subsection{UI/UX enhancements for User Engagement}
+ The UI/UX design is essential to developing a user-friendly and engaging stress detection system. The main facets of UI/UX design and their application are listed below. Adaptive UI Design: The system uses dynamic colour schemes that alter according to the stress levels that are identified (for instance, red for high stress). Features for User Accessibility: Supports several languages, such as English and Japanese and easy navigation that reduces cognitive effort with a clear visual hierarchy.  Interactive Visualisations: Instantaneous feedback via pie charts, line graphs, and reports that can be downloaded. Feedback and Error Handling: Shows individualised guidance and real-time stress feedback and offers advice and error messages for missing or erroneous input.Data visualisation methods, backend processing, and frontend technologies are all used in UX (User Experience) enhancements
+
+%\vspace{10pt} % Add space to prevent overlap
+% \begin{figure}[p] %[h!]
+   % \centering
+   % \includegraphics[width=1.1\columnwidth]%{allreferences/textprooutput1.png}
+   % \caption{Analysis and explanation}
+    %\label{fig:system_architecture}
+%\end{figure}
+ \subsubsection{Development with Streamlit}
+The primary tool for creating my user interface is Streamlit. Interactive elements such as the file uploader and audio player are used. Styled text using Markdown (st.markdown()). Messages that handle errors (st.error(), st.success()). Important UX Elements Applied with Streamlit
+Stress-level-based adaptive user nterface (colour-coded messages)
+Spinners are being loaded st.spinner() to improve feedback.
+When the file upload fails, error messages appear.
+After every upload, the graph is updated in real time.
+\subsubsection{ Flask as Backend API}
+    The backend API for processing the uploaded audio and returning the findings of the stress analysis is Flask. Flask manages the Speech Analysis work by utilising GPT-4o (stress analysis) and Whisper (voice-to-text) to handle the uploaded audio file. Additionally, it provides real-time feedback and promptly returns stress levels and explanations, assuring a low latency and seamless user experience also offers error handling. Flask produces concise error messages for the frontend to see in the event of issues (such as a missing audio file or an API failure). Further,  handle the data Processing which Formats the stress level data before sending it to Streamlit, ensuring consistent responses. 
+        \subsubsection{Whisper (Speech-to-Text Transcription)}
+Translates audio to text for stress analysis, make sure speech is recognised correctly before sending it to GPT-4, and adjusts for accents and tones for greater accuracy. Whisper was used to implement the following important UX features: Enhanced accessibility for non-text inputs;  Accurate transcription for stress assessment; Smooth speech-to-text conversion. 
+ For instance: "Whisper not only transcribes audio into text but also captures subtle vocal characteristics, such as tone fluctuations, which are critical for stress detection."
+%\clearpage  % Forces all previous content to be placed before this point
+\setlength{\parskip}{0pt} % Temporarily reduce paragraph spacing
+\begin{figure}[htbp] % Allow flexible placement
+\centering
+\includegraphics[width=0.95\columnwidth]{jsai_sig-1_0_0/whisper1.png} % Adjust width for better fit
+\caption{Speech to Text Conversion}
+\label{fig:system_architecture}
+\end{figure}
+\setlength{\parskip}{1em} % Restore paragraph spacing
+\vspace{10pt} % Add space to prevent overlap
+Figure 8 shows the transcription of the audio. After uploading the audio it transcribes the audio. the transcription result and summarization is shown in the figure.Whisper handles transcription. Distinguish by highlighting  how the impact of audio pre-processing (such as managing background noise and accents) on transcription quality. Whisper's capacity to retain vocal inflections for stress analysis later on.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\columnwidth]{jsai_sig-1_0_0/fire2transcribe.png}
+    \caption{Transcription from audio}
+    \label{fig:system_architecture}
+\end{figure}
+\vspace{10pt} % Add space to prevent overlap
+\subsubsection{Audio Processing}
+The built-in st.audio() function in Streamlit handles the audio playback. In the web interface, Streamlit's st.audio() component offers a native HTML5 audio player and it allows the common audio formats like MP3, WAV, and M4A. It also reads the audio file in bytes and shows a simple player interface on the web. Basic functions like play/pause, seek, and volume control are included with the player, along with a audio player interface that includes a progress bar.
+%\clearpage  % Forces all previous content to be placed before this point
+\vspace{10pt} % Add space to prevent overlap
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\columnwidth]{jsai_sig-1_0_0/audiofunc1.png}
+    \caption{Audio Processing}
+    \label{fig:system_architecture}
+\end{figure}
+\vspace{10pt} % Add space to prevent overlap
+
+\vspace{10pt} % Add space to prevent overlap
+   \subsubsection{GPT-4o for Stress Analysis}
+GPT-4 is set up to detect stress patterns and analyze the context. And also measures the stress level from 1 to 7 and provides an explanation. GPT-4 interprets textual input to identify contextual and semantic stress signals and its natural language processing (NLP) skills to find contextual meanings and phrases that cause stress. 
+For instance: "GPT-4 analyses the transcript by detecting linguistic cues and contextual stress indicators, such as emotional word choices or abrupt sentence patterns." The scale utilized to classify the intensity of stress and discuss how textual cues, such as sentence structure and word choice, affect the identification of stress levels.
+Stress levels are determined based on linguistic patterns like frequent use of negative words, abrupt transitions in tone, and word repetition. GPT-4o uses voice analysis to identify stress levels in transcriptions. Gives thorough contextual stress explanation instead of only numerical values. Context-based stress analysis (such as the urgency of speech patterns) comes in second. And lastly it enhanced accuracy over conventional numerical classifiers.GPT-4's role in detecting stress patterns.
+In GPT-4's analysis, focus to how audio characteristics (such tone or pitch) enhance the text and discuss about how GPT-4 improves accuracy by combining vocal stress signals with semantic context. 
+For instance: "GPT-4 combines the tonal data from the audio with semantic analysis of the transcript, creating a holistic view of the user's stress levels." 
+\vspace{10pt} % Add space to prevent overlap
+\begin{figure}[htbp] % Allow flexible placement of the figure
+\centering
+\includegraphics[width=0.9\columnwidth]{jsai_sig-1_0_0/gpt4textprocessing2.png} % Adjust width for better fit
+\caption{GPT-4 Analyse Phase}
+\label{fig:system_architecture}
+\end{figure}
+\vspace{10pt} % Add space to prevent overlap
+%\subsubsection{Response generation} 
+%The system generates customized feedback. The result was processed using explanation formatting, colour coding according to level, and numerical stress level mapping. The display feature consists of the original transcript, detailed analysis text, and color-coded stress indicators. The ability of the system to produce responses that resemble those of a human is directly influenced by the textual interpretation. 
+%For instance: "The generated response includes stress-relieving suggestions that are directly informed by the context of the transcribed text.
+\subsubsection{Output phase:Response generation} % 4.4.3
+Once the transcript is ready, a prompt is formulated. The prompt includes instructions to analyze the transcript for emotional content or specific stress indicators. This can be done using a template-based approach or dynamic prompt creation, where certain keywords (example: “fire,”“help”) trigger stress-related prompts. The transcript and prompt are fed into an LLM. This step involves packaging the input as a query that the LLM understands, potentially formatted as 'prompt': "from now you are expert in finding any stress in the following voice transcript.”Then, LLM processes the prompt and transcript, using its pre-trained knowledge of language patterns, semantics, and emotional cues to analyze the text. The LLM evaluates both the content ('fire', 'help') and the context (the urgency in the sentence structure).
+\vspace{10pt} % Add space to prevent overlap
+ \begin{figure}[H] %[h!]
+    \centering
+    \includegraphics[width=1.1\columnwidth]{jsai_sig-1_0_0/responsegentext1.png}
+    \caption{Response generation}
+    \label{fig:system_architecture}
+\end{figure}
+   \FloatBarrier % Place before starting a new section to ensure figures are not skipped
+  \subsubsection{ Stress visualization}
+"Figure 12 displays the percentage distribution of stress levels. Low stress (levels 1-3) is represented by green, mild stress (levels 4-5) by orange, and high stress (levels 6-7) by red. Interactive elements such as Legend for reference, Click-to-hide sections and hover tooltips that display precise percentages Insights like stress distribution patterns and percentages are provided by visualizations.  The implementation involved with tools like Plotly for graphical representations and connects stress data that has been captured in JSON with the user interface (UI). 
+% \clearpage  % Forces all previous content to be placed before this point
+\vspace{5pt} % Add space to prevent overlap
+\begin{figure}[htbp] % Allow flexible placement
+    \centering
+    \includegraphics[width=0.5\textwidth]{jsai_sig-1_0_0/stressvisualpie.png}
+    \caption{Stress Visualization}
+    \label{fig:stress_visualization}
+\end{figure}
+\vspace{5pt} % Add space to prevent overlap
+  \FloatBarrier
+    \subsubsection{ Stress Trend Tracking Feature}
+    Matplotlib is used for plotting the stress patterns over time , which used to visualize stress trends. To help track past stress levels for long-term insights, figure 13 present line graphs with markers to visualize user stress patterns.  The moving average is displayed by the blue trend line. The X-axis displays the session numbers. Y-axis representing stress levels from 1 to 7. Interactive features include zoom and pan controls, a time range slider for filtering data, hover tooltips for displaying precise values, and a legend for trend lines and stress levels are used. The dynamic stress trend graph which automatically updates upon each upload, improved readability with larger markers, bold labels, and annotations on each point to display stress values. 
+%\clearpage  % Forces all previous content to be placed before this point
+\vspace{10pt} % Add space to prevent overlap
+     \begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.9\columnwidth]{jsai_sig-1_0_0/trendtracking2.png}
+    \caption{Stress Trend Tracking History}
+    \label{fig:enhanced_trend_tracking}
+\end{figure}
+%\vspace{10pt} % Add space to prevent overlap
+    \subsubsection{ JSON (Local Data Storage for Stress Trends)}
+     JSON stores the history of stress levels locally. When the page is refreshed, previous stress levels are not lost and makes it possible to track previous sessions for long-term insights. The principal UX Elements applied Through JSON to avoid excessive data building, the stress history is kept for the last 50 sessions and is persistent over repeated uploads.
+ \section{Interaction flow and Implementation output}
+ \vspace{10pt} % Add space to prevent overlap
+The Speech Stress Detection System's main features are shown in Figure 14, which also features an intuitive and engaging user interface. In order verify the input, users can listen to audio recordings that they have uploaded in supported formats (such as MP3, WAV, etc.). Stress levels are detected by the system and shown clearly in a banner with colour coding. It provides context for the state by clarifying whether the detected intensity is indicative of high or low stress. To provide transparency and usability, the analysed speech is transcribed and presented for the user's reference. A line graph helps users keep an eye on their mental health by showing changes in stress levels over time. A pie chart offers a thorough overview of stress levels by classifying them as low, medium, or high intensity. Figure 4.5 illustrates these features, which demonstrate the system's emphasis on improving user experience by providing actionable information. The frontend and backend are smoothly connected via the system's interaction flow:  Through the interface, users can enter text or upload audio. Calculates stress levels by processing inputs using Whisper and GPT-4. The frontend receives the results for feedback and visualization. Key outputs produced by the system to verify its operation are shown in the figure. Audio file transcriptions. 
+Stress levels were identified and categorized, such as Severe, Slight stress and relaxed. Line graphs illustrating temporal trends in stress. Pie charts that show the distribution of stress levels.  Downloadable reports and tailored guidance. 
+ \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\columnwidth]{jsai_sig-1_0_0/streeslevel1.png}
+    \caption{Stress Level Detection System}
+    \label{fig:system_architecture}
+\end{figure}
+    % \clearpage  % Forces all previous content to be placed before this point
+%\vspace{10pt} % Add space to prevent overlap
+%\begin{figure}[h]
+   % \centering
+   % \includegraphics[width=0.5\columnwidth]{jsai_sig-1_0_0/stressreportdownload.png}
+    %\caption{Stress report}
+    %\label{fig:system_architecture}
+%\end{figure}
+%\vspace{10pt} % Add space to prevent overlap
+\section{Results and Discussion}
+  \subsection{Evaluation of Stress Detection}
+  To evaluate the performance of the system, a questionnaire form was developed and shared with participants via social networking platforms (SNS). The form included 12 audio samples, and participants were asked to provide subjective ratings for each. These human ratings were then compared with the system-generated outputs for the same audio samples. After collecting the responses, the correlation coefficient between human ratings and system outputs was calculated to assess the strength of their relationship, and a scatter plot was created to visually represent this correlation and the overall trends. To further analyze the data, a bar chart was plotted to compare the average human ratings with the system outputs, highlighting the differences and similarities. Additionally, a line chart was used to show the trends of human ratings and system outputs across all samples, providing a clear representation of their alignment or divergence. Key statistical measures, including the T-value and P-value, were calculated to determine the significance of the findings, while the Mean Absolute Error (MAE) was computed to quantify the average difference between human ratings and system outputs. These analyses, combining visualizations and statistical evaluations, offer comprehensive insights into the system’s performance, its ability to align with human judgment, and areas for further improvement. 
+\begin{table}[H]
+\centering
+\caption{System output and human estimation}
+\label{tab:correlation_table}
+\renewcommand{\arraystretch}{1.3}
+
+\begin{tabular}{|p{1.3cm}|p{3cm}|p{1cm}|}
+\hline
+\textbf{Audio} & \textbf{Average Human Rating} & \textbf{System Output} \\
+\hline
+Audio1 & 4.928571 & 6 \\
+Audio2 & 6.071429 & 7 \\
+Audio3 & 5.642857 & 6 \\
+Audio4 & 3.928571 & 3 \\
+Audio5 & 4.428571 & 3 \\
+Audio6 & 6.357143 & 6 \\
+Audio7 & 4.142857 & 3 \\
+Audio8 & 4.428571 & 3 \\
+Audio9 & 5.642857 & 7 \\
+Audio10 & 4.000000 & 3 \\
+Audio11 & 4.785714 & 4 \\
+Audio12 & 5.714286 & 7 \\
+\hline
+\end{tabular}
+\end{table}
+    \subsection{Correlation of coefficient between system output and human estimation}
+    The outputs of the stress detection system were compared with human estimations obtained via a survey in order to assess the system's performance. On a 7-point rating system, survey respondents were asked to assess the stress levels of 12 audio samples. The system's predictions and the average human ratings showed a very significant positive connection, as indicated by the analysis's correlation coefficient of 0.93. Figure 15, which visualises the relationship between the system outputs and human ratings, was created to further highlight this link using a scatter plot with a trend line. The visual depiction and strong correlation value show that the system's stress predictions closely match human experience, hence verifying its functionality.
+    \vspace{10pt} % Add space to prevent overlap
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\columnwidth]{jsai_sig-1_0_0/scattercoeef2.png}
+    \caption{Correlation of coefficient of human rating vs system outputs}
+    \label{fig:system_architecture}
+\end{figure}
+\vspace{10pt} % Add space to prevent overlap
+\subsection{Visual comparisons of human ratings and system outputs }
+The comparative analysis demonstrates how well and accurately the system  can reproduce human estimations.vFor every audio sample, the system outputs and human ratings were compared side by side in a bar chart is shown in figure 16.
+\vspace{10pt} % Add space to prevent overlap
+ \begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\columnwidth]{jsai_sig-1_0_0/bar2.png}
+    \caption{Comparison between human rating vs system outputs}
+    \label{fig:system_architecture}
+\end{figure}
+\vspace{10pt} % Add space to prevent overlap
+\subsubsection{Trend Comparison of  Human rating  vs system rating }
+The trends of system outputs and human ratings for each of the 12 audio samples were displayed in a line chart in figure 17. The trend line displays the comparison between system outputs and human ratings for various audio files. The average human assessments are shown by the blue line. The system's predictions are shown by the orange line.The system's predictions are in good agreement with human judgements when the orange and blue lines are close to adjacent ones.  A mismatch occurs when there is a discernible space between the two lines, meaning that the system's forecast deviates from the average for humans. This trend line identifies distinct audios in which the system works effectively.
+\vspace{10pt} % Add space to prevent overlap
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\columnwidth]{jsai_sig-1_0_0/trendline2.png}
+    \caption{Comparison between human rating vs system outputs}
+    \label{fig:system_architecture}
+\end{figure} 
+\vspace{10pt} % Add space to prevent overlap
+\subsubsection{Histogram of Error Distribution}
+The distribution of errors between system outputs and human assessments was shownin figure 18 using a histogram. The distribution of differences (errors) between the system outputs and human ratings is displayed by the histogram. The X-Axis shows the absolute difference (error) between system predictions and human ratings. The Y-Axis shows how many audio files have a given error value. 
+Proposed system's predictions are, on average, one point off from human evaluations, with the majority of errors centred around 1.0. A narrow and centred histogram shows that the system's predictions closely match the human assessments. 
+MAE: 
+\vspace{10pt} % Add space to prevent overlap
+ \begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\columnwidth]{jsai_sig-1_0_0/Unknown-4.png}
+    \caption{Comparison between human rating vs system outputs}
+    \label{fig:system_architecture}
+\end{figure}
+%\vspace{10pt} % Add space to prevent overlap
+\subsection{Statistical analysis}
+\subsubsection{T-Statistic: }
+T-Statistic: The T-statistic measures how much the average human rating deviates from the system output, standardized by the variability in the human ratings.
+A high positive or negative T-statistic indicates a large difference between the human ratings and system outputs.
+Measures the difference between two paired datasets (human ratings and system outputs).
+1.16: Indicates the magnitude of the difference.
+\subsubsection{P value }
+P-Value: Indicates whether the observed difference is statistically significant.
+The P-value represents the probability that the observed difference between human ratings and system outputs occurred by random chance.
+A common threshold for significance is p<0.05p<0.05. If the P-value is below this threshold, the difference is considered statistically significant.
+\vspace{10pt} % Add space to prevent overlap
+\begin{table}[H] % Use table for single-column format
+    \centering
+    \caption{P Value}
+    \label{tab:correlation_table} % Optional, for referencing in the text
+    \resizebox{\columnwidth}{!}{ % Resizes the table to fit within the column
+    \begin{tabular}{|c|c|c|c|c|}
+        \hline
+        \textbf{Audio} & \textbf{Average Human Rating} & \textbf{System Output} & \textbf{T-Statistic} & \textbf{P-Value} \\ \hline
+        Audio1 & 4.928571 & 6 & -2.259361 & 0.041680 \\ \hline
+        Audio2 & 6.214286 & 7 & -2.147767 & 0.051165 \\ \hline
+        Audio3 & 5.642857 & 6 & -0.716539 & 0.486333 \\ \hline
+        Audio4 & 3.928571 & 3 & 1.410048 & 0.182001 \\ \hline
+        Audio5 & 3.857143 & 3 & 1.834913 & 0.089497 \\ \hline
+        Audio6 & 6.357143 & 6 & 1.438772 & 0.173854 \\ \hline
+        Audio7 & 4.142857 & 3 & 2.143988 & 0.051519 \\ \hline
+        Audio8 & 4.428571 & 3 & 2.798451 & 0.015074 \\ \hline
+        Audio9 & 5.642857 & 7 & -5.467332 & 0.000108 \\ \hline
+        Audio10 & 4.000000 & 3 & 2.133073 & 0.052554 \\ \hline
+        Audio11 & 4.428571 & 4 & 1.882938 & 0.082277 \\ \hline
+        Audio12 & 5.714286 & 7 & -2.713602 & 0.017728 \\ \hline
+    \end{tabular}
+    }
+\end{table}
+  \subsection{Discussion of Results}
+     Strong Correlation: The system predictions and human ratings show a strong alignment, as indicated by the correlation coefficient of 0.92.The system produces accurate predictions with minimal variances, as indicated by the MAE of 1.01. For stress detection, the system's integration of Large Language Models (LLM) and Social Signal Processing functioned well. A strong correlation with human evaluations confirms the reliability of the system. Despite the high correlation, certain audio files showed significant differences, which warrants further analysis and improvement in the model's performance.Minor variations in certain audio samples indicate potential for improvement. Performance in noisy environments may be impacted by reliance on high-quality audio inputs.
+\section{Conclusion and Future work}
+This study presented a multimodal stress detection system that uses large language models (LLMs) and Social signal Processing to combine text-based and speech-based stress analysis. The method was created to identify stress levels by merging GPT-4-based textual analysis with audio feature extraction. User-centred Stress Visualisation: Streamlit was used to create an interactive real-time user interface (UI) that lets users upload audio samples, get stress scores, and see their stress levels on user-friendly dashboards. This research introduced stress trend visualization, which allows users to follow stress changes over numerous sessions, in contrast to traditional stress detection methods that provide immediate assessments. An interactive stress level indicator, trend graphs, and a downloadable stress report were among the UX improvements that improved the system's readability and usefulness for mental health applications. In future, to enhance generalisation, include real-time stress datasets from a variety of speakers and to increase robustness, use datasets with unplanned speech instead of recordings. Expand the system to accommodate real-time speech input processing, enabling ongoing stress monitoring.
+\section*{References}
+
+\begin{enumerate}
+\bibitem{ref1}Sriramprakash, Senthil, Vadana D. Prasanna, and OV Ramana Murthy. "Stress detection in working people." Procedia computer science 115 (2017): 359-366.
+ \bibitem{ref2} Kafková, Júlia, et al. "A New Era in Stress Monitoring: A Review of Embedded Devices and Tools for Detecting Stress in the Workplace." Electronics 13.19 (2024): 3899.
+\bibitem{ref3} Liu, Feng, et al. "Artificial intelligence in mental health: Innovations brought by artificial intelligence techniques in stress detection and interventions of building resilience." Current Opinion in Behavioral Sciences 60 (2024): 101452.
+\bibitem{ref4} Chyan, Phie, et al. "A deep learning approach for stress detection through speech with audio feature analysis." 2022 6th International Conference on Information Technology, Information Systems and Electrical Engineering (ICITISEE). IEEE, 2022.
+\bibitem{ref5} Yoon, S., et al. "Text-based stress detection using semantic analysis." Journal of Computational Linguistics, 2020.
+\bibitem{ref6} Singh, Praveen, et al. "Social signal processing for evaluating conversations using emotion analysis and sentiment detection." 2019 Second International Conference on Advanced Computational and Communication Paradigms (ICACCP). IEEE, 2019.
+\bibitem{ref7} Razavi, Moein, et al. "Machine learning, deep learning, and data preprocessing techniques for detecting, predicting, and monitoring stress and stress-related mental disorders: Scoping review." JMIR Mental Health 11 (2024): e53714.
+\bibitem{ref8} Shen, Guobin, et al. "StressPrompt: Does Stress Impact Large Language Models and Human Performance Similarly?." arXiv preprint arXiv:2409.17167 (2024).
+ \bibitem{ref9}Aristizabal, Sara, et al. "The feasibility of wearable and self-report stress detection measures in a semi-controlled lab environment." IEEE Access 9 (2021): 102053-102068.  %12
+ \bibitem{ref10}Ricker, George R., et al. "Transiting exoplanet survey satellite (tess)." American Astronomical Society Meeting Abstracts\# 215. Vol. 215. 2010. %13
+ \bibitem{ref11}Ranjan, Rajeev, and Abhishek Thakur. "Analysis of feature extraction techniques for speech recognition system." International Journal of Innovative Technology and Exploring Engineering 8.7C2 (2019): 197-200. %14
+\bibitem{ref12}Sriramprakash, Senthil, Vadana D. Prasanna, and OV Ramana Murthy. "Stress detection in working people." Procedia computer science 115 (2017): 359-366
+%\bibitem{ref16}Yao, Yiqun, et al. "Muser: Multimodal stress detection using emotion recognition as an auxiliary task." arXiv preprint arXiv:2105.08146 (2021).
+%\bibitem{ref17}Hilmy, Muhammad Syazani Hafiy, et al. "Stress classification based on speech analysis of MFCC feature via Machine Learning." 2021 8th International Conference on Computer and Communication Engineering (ICCCE). IEEE, 2021.
+%\bibitem{ref18} Teye, Martha T., et al. "Evaluation of conversational agents: understanding culture, context and environment in emotion detection." IEEE Access 10 (2022): 24976-24984.
+%\bibitem{ref19} Kush, Joseph C. "Integrating Sensor Technologies with Conversational AI: Enhancing Context-Sensitive Interaction Through Real-Time Data Fusion." Sensors 25.1 (2025): 249.
+
+\bibitem{13}Pillai, Mukesh, and Pallavi Thakur. "Developing a Website to Analyze and Validate Projects Using LangChain and Streamlit." 2024 2nd International Conference on Intelligent Data Communication Technologies and Internet of Things (IDCIoT). IEEE, 2024.
+\bibitem{ref14}Relan, Kunal. "Building REST APIs with Flask." Building REST APIs with Flask (2019).
+\end{enumerate}
+\end{document}
+
+
+Stress detection is increasingly crucial for mental health
+\chapter{Introduction}
+  \section{Background}
+  In today's world, stress is an ongoing issue that affects both physical and mental health, influencing everything from mood and productivity to long-term well-being. Stress is a natural phenomenon that causes physical and emotional tension. Chronic stress is associated with serious diseases such as heart disease, anxiety, depression and immunosuppression. Stress is analyzed by expression, tone , pitch and physiological signals. The process of detecting when someone is stressed by measuring their physiological signals is known as stress detection. To analyze these signals and classify them as stressed or relaxed, some techniques are used. The physiological signals of a person are measured by physiological sensors such as the pulse of blood volume (BVP), the galvanic skin response (GSR), and the electrocardiograms (ECGs) [1]. In mental health care, intelligent technology has shown significant promise in delivering personalized treatments and real-time stress detection. [2] [3].  Due to this, early and precise stress detection is vital for workplace wellness, healthcare, and personal well-being. However, many existing systems use single-modal data, such as text or voice, which limits their ability to capture all aspects of stress symptoms. This study explores the development of a versatile and ethical multimodal AI system designed for real-time stress detection. The system integrates voice and textual context to provide a comprehensive and accurate assessment of stress levels.
+  \section{Motivation of the research}
+  Stress has become a global problem that impacts not only mental health but also lifestyles and productivity. Due to the absence of easily accessible, reliable, and non-invasive methods, many people face obstacles in monitoring their stress. Conventional methods, such as self-assessment questionnaires or physiological monitoring, are inadequate in terms of timely insights or are impractical for daily use. Innovative systems that can effectively identify stress in real-world situations are, therefore, becoming more and more necessary.
+The voice is a perfect medium for stress detection because it is a natural source of emotional information. It transmits paralinguistic clues like tone, pitch, and rhythm in addition to linguistic content, which can reveal a person's emotional condition. Powerful tools like Large Language Models (LLMs), which can analyze textual material for deeper contextual and emotional insights, have been made possible by breakthroughs in Natural Language Processing (NLP). The majority of stress detection systems now only accept single input, which restricts the precision and usefulness. 
+Current systems' emphasis on immediate stress assessments, which overlooks long-term patterns and trends, is another major drawback. Furthermore, existing tools often lack user-friendly interfaces, user cannot use without technical expertise.
+This study is motivated by an urge to develop a multimodal system that enhances the accuracy of stress detection by integrating text-based and voice-based analysis. Using LLMs for text analysis and deep learning models for audio processing, this study aims to close the gap between state-of-the-art AI technology. A more precise and user-friendly method of tracking stress over time is provided by incorporating interactive features like stress trend tracking, which also enables users to take proactive measures for improved mental health.
+
+  \section{Problem Statement}
+  Current stress detection systems often suffer from ethical concerns regarding data privacy, and a lack of adaptive intervention mechanisms. How can we design an ethical, adaptive, and multimodal AI system that not only detects stress accurately but also provides meaningful support to promote mental well-being?
+\section{Research Objectives}
+\begin{enumerate}
+    \item To develop a system that estimates and visualizes user stress levels using Social Signal Processing (SSP) techniques, including voice analysis for both linguistic (text-based) and paralinguistic (audio-based).
+    \item To develop a multimodal AI system that integrates voice analysis and large language models (GPT-4o) for real-time stress detection.
+    \item To evaluate the performance of proposed model in detecting stress from audio data.
+    \item To design an interactive  Adaptive UI for clear stress visualization
+    \item Designing a long term stress trends for identifying stress patterns and helps user for self-regulation and stress trend graph improves readability
+    \item Supporting metacognition and mental health care.
+    \item To ensure ethical data usage and privacy preservation in the proposed system.
+\end{enumerate}
+  \section{Research Questions}
+  \begin{enumerate}
+% \item	How does the performance of LSTM compare to CNN in stress detection tasks?           
+ \item What are the challenges in integrating multimodal AI with conversational systems?
+ \item How can privacy-preserving techniques be implemented in real-time stress detection systems?
+\end{enumerate}
+  \section{Significance of the Study}
+  This research contributes to the fields of mental health care, AI ethics, and multimodal AI by developing a system that combines advanced stress detection with interactive support.
+  \section{Scope and Limitations}
+ \textbf{Scope:}
+ Focuses on voice-based stress detection and designs a stress trend module for user support.
+ \textbf{Limitations:}
+Does not include physiological signal data or longitudinal studies of user impact.
+\section{Thesis Organization}
+This thesis is structured into six chapters, each presenting a particular aspect of the study. Below is a brief overview of each chapter:
+  \begin{enumerate} 
+  \item  Chapter 1 cover  the research background, highlighting the importance of stress detection in mental health monitoring. It outlines the motivation, problem statement, research objectives, research questions, the significance of the study and scope and limitations, and the thesis organization. 
+   \item Chapter 2 The literature review assesses previous work related to stress detection, focusing on speech-based and text-based emotion recognition, Social Signal Processing (SSP), and the role of deep learning and large language models, limitations in current stress detection and conversational AI systems. It highlights the lacking in current methods and shows the need for a multimodal strategy. 
+   \item Chapter 3 This chapter describes the design and progress of the proposed multimodal stress detection system. It outlines the collection of dataset, data pre-processing procedures, and the two main modules: audio-based and text-based stress detection. Additionally, it describes the model designs, training and validation procedures and multimodal fusion techniques. 
+   \item Chapter 4 This chapter highlights the actual implementation of proposed system. It describes the architecture and workflow, including speech-to-text processing, feature extraction. The chapter also describes the development of the user interface (UI), highlighting features such as real-time stress visualization and stress trend tracking, and report generation.
+  \item  Chapter 5 This  chapter evaluates the performance of the proposed models, comparing their accuracy, precision, and recall across different approaches. It also includes experimental results between stress trend analysis system and human subjective analysis for stress. So, it highlights the system advantages and disadvantages.
+  \item  Chapter 6 This chapter covers summary of the study, limitations and future considerations. Highlighting the research's contributions to the field of stress detection, the final chapter provides a summary of the main findings. In addition to discussing the shortcomings of the current system, it suggests future research objectives, such as real-time deployment, dataset enlargement, and interaction with other modalities including physiological data.
+
+   \end{enumerate}
+\chapter{Literature Review}
+
+  \section{Stress and Mental Health: A Psychological Perspective}
+  Stress has a major impact on mental health and well-being through changes in physiological, emotional, and cognitive reactions. Effective techniques for early diagnosis and intervention are required because prolonged stress has been associated with a number of psychiatric diseases, such as anxiety and depression. Although the study [4] on stress and mental health in COVID-19 emphasizes the importance of psychological flexibility and emotional schemas, it has a number of drawbacks. Avoid making judgments about causality by using a cross-sectional strategy. Potential biases are introduced by relying solely on self-reported data. Generalizability is limited by the sample. Results may also be affected by unmeasured variables, including socioeconomic status and previous mental health problems. Finally, results are impacted by the pandemic environment, which reduces their generalisability in non-pandemic scenarios. Despite these drawbacks, the study offers valuable information on the dynamics of mental health in emergencies. Traditional stress assessment relies on self-reported questionnaires such as the Perceived Stress Scale (PSS) and physiological measures such as heart rate variability (HRV) and cortisol levels. However, these methods can be intrusive, subjective, or impractical for continuous monitoring, leading to the need for automated non-invasive stress detection systems.
+  In order to detect stress, the study[5] investigates the combination of self-reported data and wearable physiological sensors. In addition to self-reported stress levels, participants' electrodermal activity (EDA), heart rate (HR), and skin temperature were tracked using wearable technology as they performed stress-inducing tasks. These data streams were analysed by deep learning systems, which showed excellent accuracy in differentiating between stress levels. The study's semi-controlled laboratory environment, which would not accurately mimic stressors in the real world, and possible sample size and diversity restrictions, which would restrict generalisability, are some of its drawbacks. Reliability may also be impacted by sensor errors brought on by motion artefacts, self-report biases, and difficulties capturing quick shifts in stress.
+  \section{Voice-Based Stress Detection}
+  The communication medium Speech is a rich medium for detecting stress as it carries both linguistic and paralinguistic markers indicating stress. Research in speech emotion recognition (SER) has identified variations in prosodic features, such as pitch, intensity, speech rate, and spectral characteristics, as key indicators of stress with 97.1%
+  accuracy utilising the Crema-D and TESS datasets, the study[6] "A Deep Learning Approach for Stress Detection Through Speech with Audio Feature Analysis" investigates the use of CNN models for classifying stressed and unstressed speech based on Mel Spectrogram and MFCC characteristics. Nevertheless, the study has disadvantages, such as a controlled environment that does not replicate naturalistic noise situations, a binary classification approach that ignores shifting stress levels, and dataset constraints that do not represent real-world speech changes. Furthermore, the model's real-time applicability has not been validated, and its reliance on a small number of audio variables may ignore other elements. the study shows how deep learning may be used for speech-based stress detection and establishes the foundation for upcoming advancements in practical applications. 
+This work employed the Toronto Emotional Speech Set (TESS), a popular dataset for emotion identification that includes vocal expressions from a range of emotional states. Convolutional neural networks (CNNs) and long short-term memory (LSTM) networks have been used in a number of research to extract and analyse voice data in order to classify emotions. While LSTMs capture temporal dependencies in sequential data, CNNs have been especially successful in processing spectrograms, which graphically depict frequency and amplitude fluctuations over time. By utilising both spatial and temporal feature representations, the hybrid models' integration of these architectures  will increase the accuracy of stress detection.
+\section{Text based stress detection}.
+The study[7] investigates stress detection using semantic analysis of textual data, including private messages and postings on social media. The article analyses the approach on pertinent datasets to show its efficacy and finds linguistic patterns linked to stress using natural language processing (NLP) techniques. Nevertheless, there are a number of drawbacks, such as dataset restrictions that can fail to account for linguistic variation, contextual subtleties that could result in incorrect categorisation, and the lack of multimodal data like visual or aural signals. Furthermore, the model can have trouble keeping up with changing linguistic trends, necessitating frequent updates, and it poses privacy issues with relation to the use of personal data. 
+\section{Social Signal Processing (SSP) in Mental Health Systems}. 
+The study [8] examines how SSP can be used to evaluate conversations by examining sentiment and emotional indicators. In order to better comprehend human interactions, SSP looks at non-verbal cues including gestures, vocal intonation, and facial expressions. This is especially important in industries like banking and finance, where it's critical to identify client dissatisfaction. The work intends to increase dialogue analysis for customer experience and service improvement by assessing emotional intensity in large data sets. However, the study has challenges, such as contextual limits because emotional expressions depend on conversational context and data quality issues because noisy or missing data might impair accuracy. Cultural differences also affect how nonverbal cues are interpreted, and deployment is complicated by the high computational resources required for real-time processing. Furthermore, analysing chats without the express consent of the user raises privacy problems. 
+
+  \section{Machine Learning and Deep Learning for Stress Detection}
+  The application of Machine Learning (ML) and deep learning (DL) approaches to stress detection and mental health monitoring is examined in this article[9]. It draws attention to the efficacy of models such as Support Vector Machines (SVMs), Neural Networks (NNs), and Random Forest RFs, which use physiological data like skin reaction, heart rate variability (HRV), and heart rate (HR) as important stress indicators. In order to improve model performance, the study also highlights the significance of data preparation methods including feature selection and noise reduction. Nevertheless, there are a number of drawbacks, such as the inability to customise ML/DL models, which hinders their ability to adjust to different stress patterns, and their poor interpretability, which makes them less clear for clinical usage. Furthermore, the majority of research is carried out in controlled settings, which restricts its relevance in the real world, and real-time processing is still in its infancy, which makes real time interventions less feasible.
+  In order to increase classification accuracy, the research[10] presents a technique for stress detection that combines linguistic cues from text with acoustic data from speech. Compared to unimodal systems that only use text or audio, the multimodal method performs better because it uses machine learning techniques to analyse the interaction between language and vocal emotions. The lack of high-quality, labelled datasets with both text and audio components is one of the study's flaws though, and it may limit generalisability. Implementation is resource-intensive due to the contextual diversity in stress expression between cultures and individuals, which necessitates substantial training on varied datasets. In real-time processing, where accuracy and low latency must be preserved in dynamic situations, the system also faces difficulties. Error sources may also be introduced by the difficulties in synchronising text and auditory data. 
+  The study[11] emphasises how well machine learning models like Support Vector Machines (SVMs) and Mel-Frequency Cepstral Coefficients (MFCCs) work for categorising stress and extracting spectral information from speech. While SVMs have strong classification capabilities, MFCCs are especially good at capturing speech characteristics that distinguish between stressed and neutral states. Studies have shown that this method may identify stress with high accuracy rates 88 Nevertheless, drawbacks include reliance on varied and high-quality datasets, which are frequently challenging to get by, and environmental noise, which can reduce the precision of feature extraction. Furthermore, the computing needs of SVM classification and MFCC extraction create problems for real-time processing. Model generalisability is also impacted by individual variations in speech patterns, such as accents and speaking styles, which calls for customised or adaptive methods. 
+
+
+  \section{Role of Large Language Models (LLMs) in stress Analysis}
+  The study [12] investigates if Large Language Models (LLMs) undergo similar performance variations to humans when under stress. According to the Yerkes-Dodson law, which states that excessive or insufficient stress lowers efficiency, researchers discovered that LLMs operate best under moderate stress using StressPrompt, a series of stress-inducing prompts based on psychological theories. The study also showed that LLMs' internal brain representations were impacted by stress-altering stimuli, which mirrored human stress reactions. Nevertheless, there are a number of drawbacks, including as the limited generalisability of prompt-based stress induction—which may not accurately mimic real stress experiences—and the fact that results may differ depending on the LLM design. Furthermore, because the study was carried out in controlled environments and LLMs do not have human-like physiological reactions, it lacks real-world validation, which may affect how accurately stress comparisons are made. 
+  \section{Limitations in Current Stress Detection and Conversational AI Systems}
+  The study[13] investigates how contextual and cultural factors affect conversational AI systems' ability to recognise emotions. In order to classify seven fundamental emotions, including sarcasm, the study created an emotion prediction model that included voice and picture data, with accuracies ranging from 85 to 95. In order to increase the dependability and moral coherence of emotion detection systems across a range of demographics, the authors stress the importance of taking environmental factors and cultural quirks into account. However, the study has drawbacks, such as difficulties with data representation because datasets are frequently undiversified, which impairs the model's cross-cultural generalisability. Furthermore, despite efforts to balance, biases in datasets continue to exist, which could diminish fairness. Because sarcasm is nuanced and context-dependent, it is still very difficult to detect. The performance of the system can also be impacted by environmental fluctuations, including background noise.
+  By utilising real-time data fusion from several sources, including environmental sensors, biometric devices, and Internet of Things systems, the combination of sensor technologies and conversational AI allows for context-sensitive interactions. By improving AI's comprehension of user context, physical circumstances, and environment, this method[14] enables more intelligent and flexible interactions. For instance, conversational AI in healthcare enhances the responsiveness and personalisation of virtual health aides by integrating data such as temperature, stress levels, and heart rate. To fully realise the potential of these systems, however, issues like interoperability, scalability, and data heterogeneity must be resolved. The ability of sensor-integrated AI to provide real-time, context-aware help is demonstrated by real-world implementations, such as Mercedes-Benz's integration of Google's conversational AI agent into cars, opening the door for cutting-edge solutions across industries.
+  \section{Ethical Challenges in AI-Driven Stress Detection}
+  The paper [15] examines the expanding use of AI in mental health care, emphasizing how it can enhance early identification, accessibility, and personalized care. Virtual assistants and AI-powered chatbots offer prompt assistance, and predictive analytics can help spot mental health problems before they get out of hand. The study also identifies problems that make it difficult to understand AI-driven decisions, including algorithmic transparency issues, lack of human empathy in AI interactions, and data privacy concerns. Along with difficulties in incorporating AI into conventional healthcare systems due to patient and practitioner reluctance, ethical issues such as consent and autonomy continue to be crucial. In order to guarantee that AI improves mental health care while upholding ethical standards, further developments in emotionally intelligent AI, improved integration with healthcare services, and robust regulatory frameworks will be crucial.
+  
+  \section{Research Gaps and Opportunities}
+The majority of the research that has been done on stress detection has been either text-based or audio-based. Even while CNNs and LSTMs have shown excellent accuracy in identifying speech emotions, feature selection and dataset quality changes depending on dataset. LLMs have shown promise in extracting stress-related linguistic features, but their effectiveness in combination with voice analysis is still being explored. In order to fill this gap, this study proposes a multimodal stress detection system that uses both textual and auditory signals. A real-time user interface (UI) with stress trend tracking is also created to enhance accessibility and user interaction. In order to facilitate practical uses in mental health monitoring and emotional well-being, the results of this study assist in establishing solid and interpretable stress detection frameworks.
+\section{Summary of the review}
+Despite significant advancements in text and audio-based stress detection, current approaches lack the accuracy and contextual understanding needed for real-time applications. This review highlights the need for multimodal systems that integrate linguistic and paralinguistic cues, offering a foundation for this study.
+\chapter{System Design}
+Text and audio embeddings are the two main modules that comprise up my system. The system is thoughtfully designed to effectively combine both textual and audio information, creating a strong foundation for multimodal stress detection. Key aspects of the design include well-structured preprocessing pipelines, robust training and validation methods, efficient deployment strategies, and thorough dataset preparation. Each element has been carefully crafted to enhance the system's usability, scalability, and accuracy, ensuring it delivers reliable and practical results.
+\section{System architecture}
+Using multimodal inputs, the suggested system combines several parts to identify and display stress levels. The architecture is separated into three main modules, as seen in Figure 3.1: 
+Frontend (Streamlit): In handling user interaction, including audio file uploads and results visualisation.  
+Backend (Flask): Manages essential features including stress analysis, speech-to-text conversion, and external service interaction. 
+External Services: These comprise advanced text analysis APIs such as OpenAI for GPT-4. 
+These parts work together seamlessly ensuring that the system is scalable, responsive, and able to process inputs in real time. 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.1\columnwidth]{allreferences/systemdesigndia.png}
+    \caption{Proposed System}
+    \label{fig:system_architecture}
+\end{figure}
+\section{Dataset Description}
+  A limited number of audio recordings was used to generate and illustrate the functioning of the stress detection system's user interface (UI) and user experience (UX) components. These recordings, which come from openly accessible websites like Google, feature speech samples with a range of psychological tones. Even though the audio files don't represent a formal or standardized dataset, they are a useful tool for demonstrating the system's features, like trend monitoring and real-time stress level visualization. I used the audio file to capture voice at different stress levels. After processing these data, stress detection outputs were simulated and shown on the user interface. These samples are primarily being used to test and validate the stress visualisation features of interface and illustrate how stress trend tracking works throughout several sessions. Also checking interface is capable of handlingvarious stressful aspects.
+\begin{table}[H] % Use [H] to keep the table close to the text
+\centering
+\caption{Dataset Description}
+\label{tab:dataset_table} % Optional, for referencing the table
+\begin{tabular}{|c|p{8cm}|} % Adjusted column width for better text wrapping
+\hline
+\textbf{Audio} & \textbf{Text in the Audio} \\ \hline
+Audio1 & I wonder what this is about \\ \hline
+fire & The place is on fire, please send help \\ \hline
+Test1 & Loans that we can offer with this or farm ownership loans, operating lines of credit, or equipment and capital improvement need loans. The benefit to the \\ \hline
+sad.Wav & The best food novel count me on the edge of my side \\ \hline
+new recording 19.wav & 時間が戻れば私はあの時間に戻りたいま一回 \\ \hline
+new recording 16.wav & So um... I'm sick. But my friend wanted me to be a deity myself because we always had to really cool. So uh... Yeah, here it is. Do you want me to sing? Oh, it sounds really good singing. \\ \hline
+new recording 23.wav & Life is difficult, but you are loved. You are loved and important, and you bring to this world things that no one else can so hold on \\ \hline
+Airplane.wav & The airplane is almost full.\\ \hline
+Gamer.mp3 & Why would you not want to fight for what you believe in? \\ \hline
+Sad.mp3 & The delicious aroma of freshly baked bread filled the bakery. \\ \hline
+1008TIE.wav & That is exactly what happened.\\ \hline
+new recording 25.wav & Us comfort help isn't given up. It's refusing to give up. To use fall for a reason, and to use strength and weakness. I think... \\ \hline
+\end{tabular}
+\end{table}
+\section{Text Processing workflow}
+%\clearpage  % Forces all previous content to be placed before this point
+The Text Processing Workflow describes the procedures for evaluating and interpreting the text to detect stress. Figure 3.2 shows the text processing workflow, which consists of the following steps: Whisper converts audio into raw text. Using semantic context, GPT-4 analyzes the text to find stress signals. The system uses stress scale to classify stress levels (Low, Moderate, High). The system gives feedback, including stress management tips, based on the user's degree of stress. Each component in a text processing flow is responsible for handling a specific task. For example, an input handler handles text input from audio or manual entry, while an analysis engine uses GPT-4 to analyze text for stress content and analyze numerical stress levels. The formatter gets the results ready to be shown. The report generator generates reports that can be downloaded, while the display handler manages visual representation. It focuses on the processing of textual information obtained from speech. Whisper and GPT-4 are the main tools used in this workflow for the transcribed text's semantic analysis.
+ %\clearpage  % Forces all previous content to be placed before this point
+%\vspace{-5mm} % Reduce vertical space
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=1.0\columnwidth]{allreferences/textprocessingworkflow.png}
+\caption{Text processing flow}
+\label{fig:text flow}
+\end{figure}
+\subsection{Speech to Text Conversion (Whisper)}
+\noindent
+\begin{minipage}{\textwidth}
+The use of Whisper for accurate transcription. For the flow of text generation This text processing module combines the manual transcript input option, text cleaning and preparation, and whisper to convert speech to text. Whisper converts speech to text.Draw attention to Whisper's main function of converting audio into text transcripts.  This module transcribes user speech into text and performs language analysis to detect stress-related context. Identifies specific words and phrases associated with stress, using GPT-4's capabilities to interpret context. The system captures the audio. The raw audio is passed into the speech recognition API. OpenAI‘s Whisper[16] to convert into text. The voice in the audio file is converted into a textual transcript. For text formatting, the transcript is formed as cleaned or standardized and removing unnecessary pauses or artifacts. 
+ The significance of text preparation for analysis, noise reduction, and transcription accuracy is emphasized. 
+ \item For instance: "The Whisper model processes audio inputs and generates a transcript with a high degree of accuracy, filtering out noise and ensuring that only meaningful words are passed to the next stage." 
+ %\clearpage % Forces all previous content to finish
+%\vspace{-5mm} % Adjust the value as needed to reduce the gap
+\vspace{10pt} % Add space to prevent overlap
+\begin{figure}[p]
+\centering
+\includegraphics[width=1.0\columnwidth]{allreferences/textualnetwork2.png}
+\caption{Textual analysis}
+\label{fig:system_architecture}
+\end{figure}
+\end{minipage}
+\vspace{10pt} % Add space to prevent overlap
+\subsection{GPT-4 analysis setup}
+GPT-4 is set up to detect stress patterns and analyze the context. And also measures the stress level from 1 to 7 and provides an explanation. GPT-4 interprets textual input to identify contextual and semantic stress signals and its natural language processing (NLP) skills to find contextual meanings and phrases that cause stress. 
+For instance: "GPT-4 analyses the transcript by detecting linguistic cues and contextual stress indicators, such as emotional word choices or abrupt sentence patterns." 
+\subsection{Stress level scale}
+ The scale utilized to classify the intensity of stress and discuss how textual cues, such as sentence structure and word choice, affect the identification of stress levels.
+ For instance: "Stress levels are determined based on linguistic patterns like frequent use of negative words, abrupt transitions in tone, and word repetition." 
+\subsection{Response generation}
+The system generates customized feedback. The result was processed using explanation formatting, colour coding according to level, and numerical stress level mapping. The display feature consists of the original transcript, detailed analysis text, and color-coded stress indicators. The ability of the system to produce responses that resemble those of a human is directly influenced by the textual interpretation. 
+For instance: "The generated response includes stress-relieving suggestions that are directly informed by the context of the transcribed text." 
+
+\section{Audio Processing workflow} 
+The main focus of the Audio Processing Workflow is the analysis of text data along with raw audio characteristics like pitch, tone, and frequency. This section describes how the use of voice characteristics in audio data enhances the stress detection system. Figure 3.3 illustrates the audio processing process that combines GPT-4, Whisper, and the backend to analyse stress. Important actions consist of utilising the frontend to upload the audio file. Whisper audio to text conversion. Using GPT-4 to perform stress analysis and storing audio files and JSON results for tracking history. The processing pipeline goes as follows: Whisper converts audio to a transcript, the frontend uploads the audio file to the Flask backend, which keeps it temporarily. The transcript is then submitted to GPT-4 for stress analysis, the results are kept in a JSON history, and the frontend receives the response. Using a REST API design, the system's frontend and backend operate on the default ports of Streamlit and Flask, respectively. They communicate via HTTP POST requests, file transfers take place via multipart/form-data, and JSON is delivered as the result. 
+\vspace{10pt} % Add space to prevent overlap
+\begin{figure}[p]
+    \centering
+    \includegraphics[width=1.1\columnwidth]{allreferences/audioflow.png}
+    \caption{Audio processing flow}
+    \label{fig:system_architecture}
+\end{figure}
+\vspace{10pt} % Add space to prevent overlap
+\subsection{Whisper for Speech-to-Text:}
+Whisper handles transcription. Distinguish by highlighting  how the impact of audio pre-processing (such as managing background noise and accents) on transcription quality. Whisper's capacity to retain vocal inflections for stress analysis later on. 
+For instance: "Whisper not only transcribes audio into text but also captures subtle vocal characteristics, such as tone fluctuations, which are critical for stress detection." 
+\subsection{GPT-4 for Stress Analysis}
+GPT-4's role in detecting stress patterns.
+In GPT-4's analysis, focus to how audio characteristics (such tone or pitch) enhance the text and discuss about how GPT-4 improves accuracy by combining vocal stress signals with semantic context. 
+For instance: "GPT-4 combines the tonal data from the audio with semantic analysis of the transcript, creating a holistic view of the user's stress levels." 
+\subsection{Frontend to Backend Connection and Backend API Endpoint}
+Data flows between the user interface and backend. How audio files are uploaded and routed to the backend for processing, highlighting the variations in data flow. 
+For instance: "The frontend enables seamless audio file uploads, which are processed through APIs to generate real-time stress analysis results." 
+APIs are utilized for seamless communication and emphasizing how the backend responds to demands for processing that are particular to audio in a different way than it does to text. 
+For instance: "Backend APIs facilitate efficient data flow, ensuring that both audio features and their textual representations are analyzed synchronously." 
+\section{Stress visualization workflow}
+This section describes an intuitive and interactive way for users to view their stress levels. Users can see their stress levels in an easy-to-understand format with the help of the stress visualization workflow (Figure 3.4). Stress data recorded in JSON is loaded by users interacting with the UI. Plotly and other libraries are used to process data and produce pie charts and other graphics. Interactive elements and insights into stress distribution are two of the visualization's main characteristics. Interactive elements such as Legend for reference, Click-to-hide sections and hover tooltips that display precise percentages. Clear patterns and stress percentages are displayed in visualisations, which aid users in efficiently interpreting their data.
+%\vspace{-5mm} % Adjust the value to control the spacing
+\vspace{10pt} % Add space to prevent overlap
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=1.1\columnwidth]{allreferences/piestressvisual.png}
+    \caption{Stress Visualization flow}
+    \label{fig:system_architecture}
+\end{figure}
+\vspace{10pt} % Add space to prevent overlap
+\subsection{Data Loading and Processing}
+By choosing the option to "View stress trends," the user starts the process. A slider is then used by the user to select a time range for stress visualization. The process of retrieving and preprocessing. In data loading and Processing portion invloves of fetching stress data (from JSON) and get it ready for visualization. In this procedure, user-selected data is loaded according to the designated time frame. Arranging and preprocessing data in preparation for analysis. 
+
+\subsection{Color Mapping Setup and Pie Chart Creation}
+This subsection explains how stress levels are represented by colour coding: red for excessive stress, yellow for moderate stress, and green for low stress. Consistency and clarity in visual representation are assured by this arrangement of data. It shows how graphical outputs are generated from the analyzed stress data. The proportions of various stress levels are displayed using a pie chart. The Plotly library makes it easier to create dynamic charts with features such as Precise labels. Interactive sections, such as click-to-hide. Stress data is represented graphically. Visuals are rendered on the user interface, draws attention to the way the Streamlit user interface renders the images: Interactive elements and the pie chart are shown in the application. The visualizations make it simple for users to explore their stress data.
+\section{Stress trend analysis workflow}
+Changes in stress levels over time are monitored via the stress trend analysis workflow (Figure 3.5). To examine certain sessions, users can use time ranges to filter data and to improve insights and smooth out volatility, the system computes moving averages. Trends are displayed using interactive charts that can be customized. Interactive features include zoom and pan controls, a time range slider for filtering data, hover tooltips for displaying precise values, and a legend for trend lines and stress levels. 
+\vspace{10pt} % Add space to prevent overlap
+\begin{figure}[p]
+    \centering
+    \includegraphics[width=1.1\columnwidth]{allreferences/stresstrendflow.png}
+    \caption{Stress trend analysis workflow}
+    \label{fig:system_architecture}
+\end{figure}
+\vspace{10pt} % Add space to prevent overlap
+\subsection{Data Loading and Time Range Selection}
+This subsection explains how stress data is retrieved from storage and filtered based on the selected time range. It emphasizes the user’s role in selecting the desired range and how this choice influences the subsequent data analysis steps. %the process by which stress data is retrieved and filtered.
+\subsection{Moving Average Calculation}
+The process utilized for highlighting the patterns and focusses on how patterns in stress data are highlighted through calculation. To smooth out variations and identify patterns in the data, a moving average is calculated across a specified session window.
+\subsection{Interactive Plot Creation}
+The tools and techniques for dynamic visualizations. Explains how dynamic visualizations are made using various tools and techniques. By enabling zooming, panning, and hovering, interactive graphs give viewers an in-depth assessment of stress patterns
+\subsection{Customizing Plot Layout}
+ Chances to use personalization to improve user interaction. The personalisation options available to enhance user interaction are described in this subsection. Plots can be altered by users to fit their tastes in terms of colour schemes, line styles, and data presentation.
+\chapter{System Implementation and Results}
+ This chapter shows how the theoretical concept described in Chapter 3 has been realised by addressing the stress detection system's actual implementation and presenting its output. The implementation of the system are covered in this chapter, with a focus devoted to the UI/UX design, which emphasizes the visual components, interaction flow, and links to the backend procedures.  Examples, visual outputs, and screenshots are provided to demonstrate the system's operation. UI/UX components that improve user engagement and experience receive particular emphasis.The chapter also outlines the concepts, techniques, and tools used to create an usable and intuitive system that supports the goals of stress visualization and detection.
+ \section{System overview}
+ The stress detection system gives users insightful information about their stress levels by combining voice feature analysis and visualisation. In order to establish a connection the design (Chapter 3) and implementation, this section briefly restates the system's main elements.
+\textbf{Important elements:}
+\begin{enumerate}
+\item Frontend (Streamlit): Manages input processing, output visualisation, and user interaction. 
+\item  Backend (Flask): Controls response generation, model integration, and data processing. 
+\section{Frontend Implementation}
+ Implementing the UI/UX components mentioned above and creating a useful interface are the main goals of the frontend. The following are the frontend implementation's salient features:
+ \begin{enumerate}
+\item Playback and Upload of Audio:
+Users can submit.wav files for examination. And A built-in audio player lets users listen to their input again. 
+\item  Visualisation Integration: Line graphs showing stress trends are changed dynamically in context of analysis and Pie charts with distinct colour coding are used to display the stress level distribution. 
+\item Downloadable reports: Users have the option to obtain comprehensive reports with stress analyses in PDF format. 
+\item  Frontend Interaction Flow: Effortless transitions between sections for analysis, feedback, and file upload. 
+\end{enumerate}
+ \section{Backend Implementation}
+ The backend combines models, processes text and audio inputs, and sends the output back to the frontend. Important implementation specifics consist of: 
+1.	Audio Processing: Faster Whisper is used to transcribe audio files. In order to analyze stress, features are extracted. 
+2. Stress Detection using GPT-4: o GPT-4 analyzes the raw transcript to determine the stress levels (1–7). 
+3. API Communication: To ensure smooth data transmission, the backend and frontend communicate over secure endpoints. 
+4. Response Generation: o Produces numerical stress levels, thorough explanations and analysis-based advice.  
+\subsection{Input phase: Speech to Text Conversion (Whisper)}
+%\vspace{-5mm} % Reduce vertical space
+\vspace{10pt} % Add space to prevent overlap
+ \begin{figure}[p]
+    \centering
+    \includegraphics[width=1.1\columnwidth]{allreferences/whisper1.png}
+    \caption{Speech to text conversion}
+    \label{fig:system_architecture}
+\end{figure}
+\vspace{10pt} % Add space to prevent overlap
+\subsection{Audio Processing}
+The built-in st.audio() function in Streamlit handles the audio playback. In the web interface, Streamlit's st.audio() component offers a native HTML5 audio player and it allows the common audio formats like MP3, WAV, and M4A. It also reads the audio file in bytes and shows a simple player interface on the web. Basic functions like play/pause, seek, and volume control are included with the player, along with a audio player interface that includes a progress bar.
+%\clearpage  % Forces all previous content to be placed before this point
+\vspace{10pt} % Add space to prevent overlap
+\begin{figure}[p]
+    \centering
+    \includegraphics[width=1.1\columnwidth]{allreferences/audiofunc1.png}
+    \caption{Audio Processing}
+    \label{fig:system_architecture}
+\end{figure}
+\vspace{10pt} % Add space to prevent overlap
+\subsection{GPT-4 Analysis phase}
+Once the transcript is ready, a prompt is formulated. The prompt includes instructions to analyze the transcript for emotional content or specific stress indicators. This can be done using a template-based approach or dynamic prompt creation, where certain keywords (example: “fire,”“help”) trigger stress-related prompts. The transcript and prompt are fed into an LLM (GPT-4o). This step involves packaging the input as a query that the LLM understands, potentially formatted as 'prompt': "from now you are expert in finding any stress in the following voice transcript.”
+\vspace{10pt} % Add space to prevent overlap
+ \begin{figure}[p]  %[h!]
+    \centering
+    \includegraphics[width=1.1\columnwidth]{allreferences/gpt4textprocessing2.png}
+    \caption{GPT4 setup}
+    \label{fig:system_architecture}
+\end{figure}
+\vspace{10pt} % Add space to prevent overlap
+\subsection{Output phase:Response generation} % 4.4.3
+Then, LLM processes the prompt and transcript, using its pre-trained knowledge of language patterns, semantics, and emotional cues to analyze the text. The LLM evaluates both the content ('fire', 'help') and the context (the urgency in the sentence structure).
+\vspace{10pt} % Add space to prevent overlap
+ \begin{figure}[p] %[h!]
+    \centering
+    \includegraphics[width=1.1\columnwidth]{allreferences/responsegentext1.png}
+    \caption{Response generation}
+    \label{fig:system_architecture}
+\end{figure}
+\vspace{10pt} % Add space to prevent overlap
+\end{enumerate}
+ \section{UI/UX enhancements}
+ The UI/UX design is essential to developing a user-friendly and engaging stress detection system. The main facets of UI/UX design and their application are listed below.
+ \begin{enumerate}
+ \item Adaptive UI Design: The system uses dynamic colour schemes that alter according to the stress levels that are identified (for instance, red for high stress). 
+\item Features for User Accessibility: Supports several languages, such as English and Japanese and easy navigation that reduces cognitive effort with a clear visual hierarchy. 
+\item Interactive Visualisations: Instantaneous feedback via pie charts, line graphs, and reports that can be downloaded. 
+\item Feedback and Error Handling: Shows individualised guidance and real-time stress feedback and offers advice and error messages for missing or erroneous input.
+\end{enumerate}
+The Speech Stress Detection System's main features are shown in Figure 4.5, which also features an intuitive and engaging user interface. In order verify the input, users can listen to audio recordings that they have uploaded in supported formats (such as MP3, WAV, etc.). Stress levels are detected by the system and shown clearly in a banner with colour coding. It provides context for the state by clarifying whether the detected intensity is indicative of high or low stress. To provide transparency and usability, the analysed speech is transcribed and presented for the user's reference. A line graph helps users keep an eye on their mental health by showing changes in stress levels over time. A pie chart offers a thorough overview of stress levels by classifying them as low, medium, or high intensity. Figure 4.5 illustrates these features, which demonstrate the system's emphasis on improving user experience by providing actionable information.
+ \begin{figure}[p]
+    \centering
+    \includegraphics[width=0.9\columnwidth]{allreferences/streeslevel1.png}
+    \caption{Stress Level Detection System}
+    \label{fig:system_architecture}
+\end{figure}
+%\vspace{10pt} % Add space to prevent overlap
+% \begin{figure}[p] %[h!]
+   % \centering
+   % \includegraphics[width=1.1\columnwidth]%{allreferences/textprooutput1.png}
+   % \caption{Analysis and explanation}
+    %\label{fig:system_architecture}
+%\end{figure}
+ \subsection{Development with Streamlit}
+The primary tool for creating my user interface is Streamlit. Interactive elements such as the file uploader and audio player are used. Styled text using Markdown (st.markdown()). Messages that handle errors (st.error(), st.success()). Important UX Elements Applied with Streamlit
+Stress-level-based adaptive user nterface (colour-coded messages)
+Spinners are being loaded st.spinner() to improve feedback.
+When the file upload fails, error messages appear.
+After every upload, the graph is updated in real time.
+
+\subsection{UX Enhancements for User Engagement}
+    Data visualisation methods, backend processing, and frontend technologies are all used in UX (User Experience) enhancements.
+    \subsubsection{ Flask as Backend API}
+    The backend API for processing the uploaded audio and returning the findings of the stress analysis is Flask. Flask manages the Speech Analysis work by utilising GPT-4o (stress analysis) and Whisper (voice-to-text) to handle the uploaded audio file. Additionally, it provides real-time feedback and promptly returns stress levels and explanations, assuring a low latency and seamless user experience also offers error handling. Flask produces concise error messages for the frontend to see in the event of issues (such as a missing audio file or an API failure). Further,  handle the data Processing which Formats the stress level data before sending it to Streamlit, ensuring consistent responses. 
+        \subsubsection{Whisper (Speech-to-Text Transcription)}
+Translates audio to text for stress analysis, make sure speech is recognised correctly before sending it to GPT-4, and adjusts for accents and tones for greater accuracy. Whisper was used to implement the following important UX features: Enhanced accessibility for non-text inputs;  Accurate transcription for stress assessment; Smooth speech-to-text conversion. 
+Figure 4.7 shows the transcription of the audio. After uploading the audio it transcribes the audio. the transcription result and summarization is shown in the figure.
+%\clearpage  % Forces all previous content to be placed before this point
+\vspace{10pt} % Add space to prevent overlap
+\begin{figure}[p]
+    \centering
+    \includegraphics[width=1.0\columnwidth]{allreferences/fire2transcribe.png}
+    \caption{Transcription from audio}
+    \label{fig:system_architecture}
+\end{figure}
+\vspace{10pt} % Add space to prevent overlap
+Figure 4.8  also shows the transcription of the audio. After uploading the audio it transcribes the audio. the transcription result and summarization is shown in the figure. 
+\vspace{10pt} % Add space to prevent overlap
+%\clearpage  % Forces all previous content to be placed before this point
+\vspace{10pt} % Add space to prevent overlap
+\begin{figure}[p]
+    \centering
+    \includegraphics[width=1.0\columnwidth]{allreferences/supermarket.png}
+    \caption{Transcription from audio}
+    \label{fig:system_architecture}
+\end{figure}
+\vspace{10pt} % Add space to prevent overlap
+   \subsubsection{ OpenAI GPT-4o for Stress Analysis}
+    GPT-4o uses voice analysis to identify stress levels in transcriptions. Gives thorough contextual stress explanation instead of only numerical values. It contributes to the humanisation and intuitiveness of stress evaluation. Detailed stress level explanations (rather than just numbers) are one of the key UX features implemented with GPT-4. Context-based stress analysis (such as the urgency of speech patterns) comes in second. And lastly it enhanced accuracy over conventional numerical classifiers
+     \subsubsection{ Explanation and advice}
+     The system analyses the speech transcript using GPT-4 to determine the user's intent, tone, and emotional context. For example Figure 4.9 shows the expression "If time could go back" is understood to mean regret or desire, which is classified as a stress-related mental state. The identified stress level (Level 3) is assigned by the method to a matching database category, such as "internal stress or conflict due to dissatisfaction or nostalgia.".There is guidance associated with each stress level. For instance: "Take breaks, practise mindfulness, stay hydrated." is the Level 3 Stress Advice. Tailored to stress context for making it easy to use and actionable, the advice is straightforward, generic, and practical. 
+%\clearpage  % Forces all previous content to be placed before this point
+\vspace{10pt} % Add space to prevent overlap
+\begin{figure}[p]
+\centering
+\includegraphics[width=0.9\columnwidth]{allreferences/advice1.png}
+\caption{Explanation and Advice}
+\label{fig:advice1}
+\end{figure} 
+Also The system successfully offers advise based on identified stress intensity, as seen in Figure 4.10. The system determined that the intensity in this case was moderate and assigned a Stress Level of 3. The system showed its ability to provide guidance for handling elevated stresss, even if the detected stress was primarily enthusiasm and engagement. This demonstrates how the system works to give people practical advice regardless of their mental state, which promotes general awareness and control.  
+\vspace{10pt} % Add space to prevent overlap
+%\vspace{-5mm} % Reduce vertical space
+\begin{figure}[p]
+    \centering
+    \includegraphics[width=1.0\columnwidth]{allreferences/advice2.png}
+    \caption{Explanation and Advice}
+    \label{fig:system_architecture}
+\end{figure} 
+\vspace{10pt} % Add space to prevent overlap
+  \subsubsection{ Stress visualization}
+Figure 4.11 displays the percentage distribution of stress levels. Low stress (levels 1-3) is represented by green, mild stress (levels 4-5) by orange, and high stress (levels 6-7) by red. Interactive elements such as Legend for reference, Click-to-hide sections and hover tooltips that display precise percentages Insights like stress distribution patterns and percentages are provided by visualizations.  The implementation involved with tools like Plotly for graphical representations and connects stress data that has been captured in JSON with the user interface (UI). 
+% \clearpage  % Forces all previous content to be placed before this point
+\vspace{10pt} % Add space to prevent overlap
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{allreferences/stressvisualpie.png}
+    \caption{Stress Visualization}
+    \label{fig:system_architecture}
+\end{figure}
+\vspace{10pt} % Add space to prevent overlap
+    \subsubsection{ Stress Trend Tracking Feature}
+     I plotted the stress patterns over time using Matplotlib, which I used to visualize stress trends. To help track past stress levels for long-term insights, figure 4.12 present line graphs with markers to visualize user stress patterns.  The moving average is displayed by the blue trend line. The X-axis displays the session numbers. Y-axis representing stress levels from 1 to 7. Interactive features include zoom and pan controls, a time range slider for filtering data, hover tooltips for displaying precise values, and a legend for trend lines and stress levels are used. The dynamic stress trend graph which automatically updates upon each upload, improved readability with larger markers, bold labels, and annotations on each point to display stress values. 
+%\clearpage  % Forces all previous content to be placed before this point
+\vspace{10pt} % Add space to prevent overlap
+     \begin{figure}[h]
+    \centering
+    \includegraphics[width=1.0\columnwidth]{allreferences/trendtracking2.png}
+    \caption{Stress Trend Tracking History}
+    \label{fig:system_architecture}
+\end{figure}
+\vspace{10pt} % Add space to prevent overlap
+    \subsubsection{ JSON (Local Data Storage for Stress Trends)}
+    Figure 4.13 shows the stress report. JSON stores the history of stress levels locally. When the page is refreshed, previous stress levels are not lost and makes it possible to track previous sessions for long-term insights. The principal UX Elements applied Through JSON to avoid excessive data building, the stress history is kept for the last 50 sessions and is persistent over repeated uploads.
+    % \clearpage  % Forces all previous content to be placed before this point
+\vspace{10pt} % Add space to prevent overlap
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\columnwidth]{allreferences/stressreportdownload.png}
+    \caption{Stress report}
+    \label{fig:system_architecture}
+\end{figure}
+\vspace{10pt} % Add space to prevent overlap
+ \section{Interaction flow}
+The frontend and backend are smoothly connected via the system's interaction flow: 
+\begin{enumerate}
+\item User Interaction: Through the interface, users can enter text or upload audio. 
+\item Backend Processing:  Calculates stress levels by processing inputs using Whisper and GPT-4. 
+\item Feedback and Visualization: The frontend receives the results for feedback and visualization. 
+\end{enumerate}
+  \section{Implementation output}
+Key outputs produced by the system to verify its operation are shown in this section:
+\begin{enumerate}
+\item Stress Analysis Findings: Audio file transcriptions. 
+Stress levels were identified and categorized, such as Severe, Slight stress and relaxed. 
+\item Visualization Outcomes: Line graphs illustrating temporal trends in stress. 
+Pie charts that show the distribution of stress levels. 
+\item Reports and Feedback: Downloadable reports and tailored guidance. 
+\end{enumerate} 
+\chapter{Results and Discussion}
+  \section{Evaluation of Stress Detection}
+  To evaluate the performance of the system, a questionnaire form was developed and shared with participants via social networking platforms (SNS). The form included 12 audio samples, and participants were asked to provide subjective ratings for each. These human ratings were then compared with the system-generated outputs for the same audio samples. After collecting the responses, the correlation coefficient between human ratings and system outputs was calculated to assess the strength of their relationship, and a scatter plot was created to visually represent this correlation and the overall trends. To further analyze the data, a bar chart was plotted to compare the average human ratings with the system outputs, highlighting the differences and similarities. Additionally, a line chart was used to show the trends of human ratings and system outputs across all samples, providing a clear representation of their alignment or divergence. Key statistical measures, including the T-value and P-value, were calculated to determine the significance of the findings, while the Mean Absolute Error (MAE) was computed to quantify the average difference between human ratings and system outputs. These analyses, combining visualizations and statistical evaluations, offer comprehensive insights into the system’s performance, its ability to align with human judgment, and areas for further improvement. 
+  \begin{table}[h!] % Optional, h! ensures the table stays close to where it's defined
+\centering
+\caption{Correlation of coefficient between system output and human estimation}
+\label{tab:correlation_table} % Optional, for referencing in the text
+\begin{tabular}{|c|c|c|}
+\hline
+Audio & Average Human Rating & System Output \\ \hline
+Audio1 & 4.928571 & 6 \\ \hline
+Audio2 & 6.071429 & 7 \\ \hline
+Audio3 & 5.642857 & 6 \\ \hline
+Audio4 & 3.928571 & 3 \\ \hline
+Audio5 & 4.428571 & 3 \\ \hline
+Audio6 & 6.357143 & 6 \\ \hline
+Audio7 & 4.142857 & 3 \\ \hline
+Audio8 & 4.428571 & 3 \\ \hline
+Audio9 & 5.642857 & 7 \\ \hline
+Audio10 & 4.000000 & 2 \\ \hline
+Audio11 & 4.785714 & 4 \\ \hline
+Audio12 & 5.714286 & 7 \\ \hline
+\end{tabular}
+\end{table}
+    \section{Correlation of coefficient between system output and human estimation}
+    The outputs of the stress detection system were compared with human estimations obtained via a survey in order to assess the system's performance. On a 7-point rating system, survey respondents were asked to assess the stress levels of 12 audio samples. The system's predictions and the average human ratings showed a very significant positive connection, as indicated by the analysis's correlation coefficient of 0.93. Figure 5.1, which visualises the relationship between the system outputs and human ratings, was created to further highlight this link using a scatter plot with a trend line. The visual depiction and strong correlation value show that the system's stress predictions closely match human experience, hence verifying its functionality.
+    \vspace{10pt} % Add space to prevent overlap
+\begin{figure}[p]
+    \centering
+    \includegraphics[width=1.0\columnwidth]{allreferences/scattercoeef2.png}
+    \caption{Correlation of coefficient of human rating vs system outputs}
+    \label{fig:system_architecture}
+\end{figure}
+\vspace{10pt} % Add space to prevent overlap
+\section{Visual comparisons of human ratings and system outputs }
+The comparative analysis demonstrates how well and accurately the system  can reproduce human estimations.
+\subsection{Comparison of  Human rating  vs system rating }
+For every audio sample, the system outputs and human ratings were compared side by side in a bar chart.
+\vspace{10pt} % Add space to prevent overlap
+ \begin{figure}[p]
+    \centering
+    \includegraphics[width=1.0\columnwidth]{allreferences/bar2.png}
+    \caption{Comparison between human rating vs system outputs}
+    \label{fig:system_architecture}
+\end{figure}
+\vspace{10pt} % Add space to prevent overlap
+\subsection{Trend Comparison of  Human rating  vs system rating }
+The trends of system outputs and human ratings for each of the 12 audio samples were displayed in a line chart. The trend line displays the comparison between system outputs and human ratings for various audio files. The average human assessments are shown by the blue line. The system's predictions are shown by the orange line.The system's predictions are in good agreement with human judgements when the orange and blue lines are close to adjacent ones.  A mismatch occurs when there is a discernible space between the two lines, meaning that the system's forecast deviates from the average for humans. This trend line identifies distinct audios in which the system works effectively.
+\vspace{10pt} % Add space to prevent overlap
+\begin{figure}[p]
+    \centering
+    \includegraphics[width=1.0\columnwidth]{allreferences/trendline2.png}
+    \caption{Comparison between human rating vs system outputs}
+    \label{fig:system_architecture}
+\end{figure} 
+\vspace{10pt} % Add space to prevent overlap
+\subsection{Histogram of Error Distribution}
+The distribution of errors between system outputs and human assessments was shown using a histogram. The distribution of differences (errors) between the system outputs and human ratings is displayed by the histogram. The X-Axis shows the absolute difference (error) between system predictions and human ratings. The Y-Axis shows how many audio files have a given error value. 
+Proposed system's predictions are, on average, one point off from human evaluations, with the majority of errors centred around 1.0. A narrow and centred histogram shows that the system's predictions closely match the human assessments. 
+MAE: 
+\vspace{10pt} % Add space to prevent overlap
+ \begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\columnwidth]{allreferences/Unknown-4.png}
+    \caption{Comparison between human rating vs system outputs}
+    \label{fig:system_architecture}
+\end{figure}
+\vspace{10pt} % Add space to prevent overlap
+\section{Statistical analysis}
+\subsection{T-Statistic: }
+T-Statistic: The T-statistic measures how much the average human rating deviates from the system output, standardized by the variability in the human ratings.
+A high positive or negative T-statistic indicates a large difference between the human ratings and system outputs.
+Measures the difference between two paired datasets (human ratings and system outputs).
+1.16: Indicates the magnitude of the difference.
+\subsection{P value }
+P-Value: Indicates whether the observed difference is statistically significant.
+The P-value represents the probability that the observed difference between human ratings and system outputs occurred by random chance.
+A common threshold for significance is p<0.05p<0.05. If the P-value is below this threshold, the difference is considered statistically significant.
+\vspace{10pt} % Add space to prevent overlap
+\begin{table}[p] % Optional, h! ensures the table stays close to where it's defined
+\centering
+\caption{P Value}
+\label{tab:correlation_table} % Optional, for referencing in the text
+ \begin{tabular}{|c|c|c|c|c|}
+        \hline
+        Audio & Average Human rating & System Output & T-statistic & P-value \\ \hline
+        Audio1 & 4.928571 & 6 & -2.259361 & 0.041680\\ \hline
+        Audio2 & 6.214286 & 7 & -2.147767 & 0.051165\\ \hline
+        Audio3 & 5.642857 & 6& -0.716539 & 0.486333 \\ \hline
+        Audio4 & 3.928571 & 3 & 1.410048 & 0.182001\\ \hline
+        Audio5 & 3.857143 & 3 & 1.834913& 0.089497\\ \hline
+        Audio6 & 6.357143 & 6 &  1.438772 & 0.173854\\ \hline
+        Audio7 & 4.142857 & 3& 2.143988 & 0.051519  \\ \hline
+        Audio8 & 4.428571 & 3&  2.798451 & 0.015074 \\ \hline
+        Audio9 & 5.642857 & 7 & -5.467332 & 0.000108\\ \hline
+        Audio10 & 4.000000 & 3 & 2.133073 &  0.052554 \\ \hline
+        Audio11 & 4.428571 & 4 &   1.882938 & 0.082277\\ \hline
+        Audio12 & 5.714286 & 7 & -2.713602 & 0.017728\\ \hline
+    \end{tabular}%
+   \end{table}
+   \vspace{10pt} % Add space to prevent overlap
+
+  \section{Discussion of Results}
+    \subsection{Key Findings}
+    \begin{enumerate}
+\item Strong Correlation: The system predictions and human ratings show a strong alignment, as indicated by the correlation coefficient of 0.92. 
+\item  Minimal Error: The system produces accurate predictions with minimal variances, as indicated by the MAE of 1.01. 
+\item Statistical Validation: The system's outputs and human ratings do not differ statistically significantly, according to the findings of the paired t-test (τ-statistic: 1.16, p-value: 0.2709). 
+\end{enumerate}
+ \subsection{Insights on Multimodal Data Integration}
+For stress detection, the system's integration of Large Language Models (LLM) and Social Signal Processing functioned well.The multimodal approach enabled:
+\begin{enumerate}
+\item Proper audio input transcription. 
+ \item  Accurate assessment of stress levels using linguistic and vocal content. 
+\end{enumerate}
+\section{Advantages and Limitations of the System}
+\textbf{Advantages:}
+\begin{enumerate}
+    \item A strong correlation with human evaluations confirms the reliability of the system.
+    \item Stress detection is made easier by an intuitive user interface (UI).
+    \item A low prediction error improves system accuracy.
+\end{enumerate}
+\textbf{Limitations:}
+\begin{enumerate}
+\item  Despite the high correlation, certain audio files showed significant differences, which warrants further analysis and improvement in the model's performance.
+    \item Minor variations in certain audio samples indicate potential for improvement.
+    \item Performance in noisy environments may be impacted by reliance on high-quality audio inputs.
+\end{enumerate}
+\chapter{Conclusion and Future Work}
+  \section{Summary of the Research}
+  This study presented a multimodal stress detection system that uses large language models (LLMs) and Social signal Processing to combine text-based and speech-based stress analysis. The method was created to identify stress levels by merging GPT-4-based textual analysis with audio feature extraction. User-centred Stress Visualisation: Streamlit was used to create an interactive real-time user interface (UI) that lets users upload audio samples, get stress scores, and see their stress levels on user-friendly dashboards. This research introduced stress trend visualization, which allows users to follow stress changes over numerous sessions, in contrast to traditional stress detection methods that provide immediate assessments. An interactive stress level indicator, trend graphs, and a downloadable stress report were among the UX improvements that improved the system's readability and usefulness for mental health applications. These results demonstrate how well deep learning-based stress detection works and how crucial UX enhancements are to developing intuitive, real-time stress monitoring solutions.
+  \section{Contributions of the Study}
+   \begin{enumerate}
+   \item Creation of a Multimodal Stress Detection System integrated vocal analysis and LLM-based text analysis.  
+ \item Deployment of Long-Term Monitoring Stress Trend Visualisation 
+ Added a dynamic stress trend monitoring function that allows users to examine stress trends over time. 
+Enhanced applications for mental health monitoring by offering a historical perspective on stress variations. 
+ \item UX Improvements for Accessibility and User Interaction 
+Developed an interactive user interface with stress visualisation to improve the interpretability and actionability of stress detection results. 
+Added downloadable stress reports, stress level indicators, and real-time feedback, improving the usefulness of stress detection tools. 
+\end{enumerate}
+Through the integration of deep learning, multimodal AI, and user-centred design, these contributions enhance the real-world implementation of stress detection systems.
+ 
+  \section{Limitations of the Proposed System}
+Despite the positive results of this study, a number of limitations need to be taken into account. Instead of recording live speech inputs, the system processes pre-recorded speech, which restricts the possibility of real-time engagement.
+ 
+  \section{Recommendations for Future Research}
+   \begin{enumerate}
+   \item To enhance generalisation, include real-time stress datasets from a variety of speakers.To increase robustness, use datasets with unplanned speech instead of recordings.
+ \item  Expand the system to accommodate real-time speech input processing, enabling ongoing stress monitoring. Create an adaptable user interface (UI) that adapts to the stress levels of its users and offers tailored suggestions and feedback.
+ \item Combining Multimodal Physiological Information For a more comprehensive stress evaluation, combine physiological cues (such as skin conductivity and heart rate) with speech-based stress detection. Investigate integrating wearable technology (such as smartwatches) for multimodal stress detection in real time.
+ \item To offer individualized stress management techniques, consider integration with mental health conversation systems. 
+ \item Make the CNN-LSTM model faster on edge devices by optimizing it. Examine compact deep learning architectures that can be implemented on embedded and mobile devices. 
+ 
+The feasibility, scalability, and impact of AI-driven stress detection systems for mental health applications are the goals of these future areas. 
+ \end{enumerate}
+
+  \section{Final Thoughts}
+This study introduces a multimodal and user-friendly stress detection system which advances the expanding field of AI-driven mental health care. This system improves stress monitoring, visualization, and interpretability through large language models and UX-focused design. The results show that real-time stress tracking combined with voice and text-based analysis can produce insightful information on mental health. This system could be used as a useful tool for stress monitoring and mental health support with more improvements and real-world validations, bridging the gap between AI-based emotion recognition and practical applications.
+%\appendix
+%\chapter{Appendices}
+
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+\begin{thebibliography}{99}
+\setlength{\itemsep}{0pt} % Adjust spacing between bibliography entrie
+\bibitem{ref1}Sriramprakash, Senthil, Vadana D. Prasanna, and OV Ramana Murthy. "Stress detection in working people." Procedia computer science 115 (2017): 359-366
+\bibitem{ref2} Kafková, Júlia, et al. "A New Era in Stress Monitoring: A Review of Embedded Devices and Tools for Detecting Stress in the Workplace." Electronics 13.19 (2024): 3899.
+\bibitem{ref3} Liu, Feng, et al. "Artificial intelligence in mental health: Innovations brought by artificial intelligence techniques in stress detection and interventions of building resilience." Current Opinion in Behavioral Sciences 60 (2024): 101452.
+\bibitem{ref4} Sebastião, Rita, and David Dias Neto. "Stress and mental health: The role of emotional schemas and psychological flexibility in the context of COVID-19." Journal of Contextual Behavioral Science 32 (2024): 100736.
+ \bibitem{ref5}Aristizabal, Sara, et al. "The feasibility of wearable and self-report stress detection measures in a semi-controlled lab environment." IEEE Access 9 (2021): 102053-102068.
+\bibitem{ref6} Chyan, Phie, et al. "A deep learning approach for stress detection through speech with audio feature analysis." 2022 6th International Conference on Information Technology, Information Systems and Electrical Engineering (ICITISEE). IEEE, 2022.
+\bibitem{ref7} Yoon, S., et al. "Text-based stress detection using semantic analysis." Journal of Computational Linguistics, 2020.
+\bibitem{ref8} Singh, Praveen, et al. "Social signal processing for evaluating conversations using emotion analysis and sentiment detection." 2019 Second International Conference on Advanced Computational and Communication Paradigms (ICACCP). IEEE, 2019.
+\bibitem{ref9} Razavi, Moein, et al. "Machine learning, deep learning, and data preprocessing techniques for detecting, predicting, and monitoring stress and stress-related mental disorders: Scoping review." JMIR Mental Health 11 (2024): e53714.
+\bibitem{ref10}Yao, Yiqun, et al. "Muser: Multimodal stress detection using emotion recognition as an auxiliary task." arXiv preprint arXiv:2105.08146 (2021).
+\bibitem{ref11}Hilmy, Muhammad Syazani Hafiy, et al. "Stress classification based on speech analysis of MFCC feature via Machine Learning." 2021 8th International Conference on Computer and Communication Engineering (ICCCE). IEEE, 2021.
+\bibitem{ref12} Shen, Guobin, et al. "StressPrompt: Does Stress Impact Large Language Models and Human Performance Similarly?." arXiv preprint arXiv:2409.17167 (2024).
+
+%\bibitem{ref9} Olawade, David B., et al. "Enhancing mental health with Artificial Intelligence: Current trends and future prospects." Journal of medicine, surgery, and public health (2024): 100099.
+
+
+%\bibitem{ref12} Graham, Calbert, and Nathan Roll. "Evaluating OpenAI's Whisper ASR: Performance analysis across diverse accents and speaker traits." JASA Express Letters 4.2 (2024).
+\bibitem{ref13} Teye, Martha T., et al. "Evaluation of conversational agents: understanding culture, context and environment in emotion detection." IEEE Access 10 (2022): 24976-24984.
+
+\bibitem{ref14} Kush, Joseph C. "Integrating Sensor Technologies with Conversational AI: Enhancing Context-Sensitive Interaction Through Real-Time Data Fusion." Sensors 25.1 (2025): 249.
+\bibitem{ref15}Sriramprakash, Senthil, Vadana D. Prasanna, and OV Ramana Murthy. "Stress detection in working people." Procedia computer science 115 (2017): 359-366
+\bibitem{ref16}Macháček, Dominik, Raj Dabre, and Ondřej Bojar. "Turning whisper into real-time transcription system." arXiv preprint arXiv:2307.14743 (2023).
+  
+ %\bibitem{ref13}Ricker, George R., et al. "Transiting exoplanet survey satellite (tess)." American Astronomical Society Meeting Abstracts\# 215. Vol. 215. 2010.
+ %\bibitem{ref14}Ranjan, Rajeev, and Abhishek Thakur. "Analysis of feature extraction techniques for speech recognition system." International Journal of Innovative Technology and Exploring Engineering 8.7C2 (2019): 197-200.
+ %\bibitem{ref15}Yan, Mengzhu, and Xue Wu. "Prosody in linguistic journals: a bibliometric analysis." Humanities and Social Sciences Communications 11.1 (2024): 1-15.
+
+\end{thebibliography}
+% Add additional references here
+
+% use section* for acknowledgement
+\chapter*{Acknowledgements}
+ 
+
+
+%\addcontentsline{toc}{chapter}{List of Tables}
+%\listoftables
+\addcontentsline{toc}{chapter}{List of Figures}
+%\listoffigures
+
+% that's all folks
+\end{document}
+
+
+
+\cleardoublepage
+\thispagestyle{empty}
+\chapter{Introduction}
+\clearpage
+\input{part/introduction/main}
+
+\cleardoublepage
+\thispagestyle{empty}
+\chapter{Related Study}
+\clearpage
+\input{part/literature survey/main}
+
+\cleardoublepage
+\thispagestyle{empty}
+\chapter{Early Designs}
+\clearpage
+\include{part/prototypes/main}
+
+\cleardoublepage
+\thispagestyle{empty}
+\chapter{Methodology}
+\clearpage
+\include{part/concepts/main}
+
+\cleardoublepage
+\thispagestyle{empty}
+\chapter{Implementation}
+\clearpage
+\include{part/implementation/main}
+
+\cleardoublepage
+\thispagestyle{empty}
+\chapter{Evaluation and Results}
+\clearpage
+\include{part/evaluation/main}
+
+\cleardoublepage
+\thispagestyle{empty}
+\chapter{Discussion}
+\clearpage
+\include{part/discussion/main}
+
+\cleardoublepage
+\thispagestyle{empty}
+\chapter{Conclusion}
+\clearpage
+\include{part/conclusion/main}
+
+\cleardoublepage
+\thispagestyle{empty}
+\input{part/bibliography/bibliography}
+
+
+\appendix
+\include{part/appendix/appendix}
+
+% conference chapters do not normally have an appendix
+
+% use section* for acknowledgement
+% \chapter*{Acknowledgements}
+
+% that's all folks
+\end{document}
