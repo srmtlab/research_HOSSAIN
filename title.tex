@@ -1,0 +1,93 @@
+%!TEX root = ../../main.tex
+% タイトルページ
+%\documentclass[a4j,12pt]{jreport}
+%\usepackage{graphicx}
+%\usepackage{times}
+%\usepackage{selectp}
+%\usepackage{epsf}
+%\usepackage{epsbox}
+%\usepackage{graphicx}
+%\usepackage{verbatimfiles}
+%\usepackage{here}
+%%\usepackage{url}
+%\usepackage{fancyhdr}
+%\usepackage{algorithm}
+%\usepackage{cite}
+%\usepackage{ascmac}
+%\usepackage{amsmath}
+%\usepackage{amsthm}
+%\usepackage{amssymb}
+%\usepackage{latexsym}
+
+%\usepackage{thesis}
+%\input{mymacros}
+%\begin{document}
+
+\oddsidemargin=17mm
+\evensidemargin=-4mm
+
+\thispagestyle{empty}
+% タイトル
+\def \englishtitle{
+A Multimodal System for Stress Detection and Visualization using Social Signal Processing and Large Language Models}
+\def \japanesetitle{
+社会的信号処理とLLMを用いたマルチモーダルなストレス検出・可視化システムの開発
+}
+% 著者
+\def \author{HOSSAIN Syeda Tanzina}
+% 提出日
+\def \date{\today}
+% 指導教官名
+\def \teacher{Shun~SHIRAMATSU}
+% 指導教官の肩書き
+\def \teacherrank{Prof.}
+% 所属
+\def \belong{Dept. of Computer Science\\Graduate School of Engineering\\Nagoya Institute of Technology}
+% 入学年度
+\def \year{2023}
+% 学籍番号
+\def \regnum{35414100}
+
+% Font sizes for layout
+\def\sizeLL#1{\Huge #1}
+\def\sizeL#1{\LARGE #1}
+\def\sizeM#1{\Large #1}
+\def\sizeS#1{\large #1}
+
+% Title decorations
+\def\REYrule{\hbox to 5cm{\leaders\hrule height 1pt\hfill}}
+\newbox\REYbox
+\def\announce#1{
+  \setbox\REYbox=\hbox{\REYrule\quad{\Large\bf #1}\quad\raise3pt\REYrule}%
+  \gdef\REYbigrule{\hbox to \wd\REYbox{\leaders\hrule height 1pt \hfill}}%
+  \centerline{\raise3pt\REYrule\vspace*{2mm}\quad{\LARGE #1}\quad\raise3pt\REYrule}}
+\def\endannounce{\par\centerline{\REYbigrule}}
+
+% Title page
+\begin{titlepage}
+ \begin{center}
+  \vspace*{5mm} % Slight space at the top
+  \sizeLL{Master Thesis}\\
+  \vspace*{5mm} % Space after the main title
+  \begin{announce}{(Title)}
+   \sizeL{\englishtitle}\\ % English Title
+   \textbf{{\CJKfamily{ipaexm}\sizeM{\japanesetitle}}} % Japanese Title in CJK font
+  \end{announce}
+  \vspace*{5mm} % Space before the supervisor details
+  \sizeL{Supervisor:~}\sizeM{\teacherrank~\teacher}\\
+  \vspace*{5mm} % Space before the department details
+  \sizeM{\belong}\\
+  \vspace*{5mm} % Space before enrollment details
+  \sizeM{Enrolment:~April 1, \year}\\
+  \vspace*{5mm} % Space before the table
+  \begin{table}[h!]
+    \centering
+    \begin{tabular}{cl}
+      \sizeM{(Student ID):} & \sizeL{\underline{~\regnum~}} \\
+      \sizeM{(Name):}       & \sizeL{\underline{~\author~}} \\
+    \end{tabular}
+  \end{table}
+  \vspace*{5mm} % Space before the submission date
+  \sizeS{(Submission Date: February 3, 2025)} % Submission Date
+ \end{center}
+\end{titlepage}
